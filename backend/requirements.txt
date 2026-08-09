@@ -20,8 +20,6 @@ pandas
 numpy
 
 # AI (Local + External)
-transformers
-torch
 sumy
 google-genai
 python-dotenv
