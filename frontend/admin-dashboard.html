@@ -203,7 +203,45 @@
         grid-template-columns: 1fr;
       }
     }
-  </style>
+  
+    /* Mobile Admin CSS */
+    .admin-hamburger {
+      display: none;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      cursor: pointer;
+      padding: 0.5rem;
+      margin-right: 1rem;
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        left: -260px;
+        top: 0;
+        bottom: 0;
+        box-shadow: var(--shadow);
+      }
+      .sidebar.open {
+        left: 0;
+      }
+      .admin-hamburger {
+        display: block;
+      }
+      .topbar {
+        padding: 0 1rem;
+      }
+      .topbar h2 {
+        font-size: 1.25rem;
+      }
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
+      .content-area {
+        padding: 1rem;
+      }
+    }
+</style>
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>
@@ -414,6 +452,18 @@
     // Customize Chart.js defaults to match our theme dynamically
     Chart.defaults.color = getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim() || '#94a3b8';
     Chart.defaults.font.family = getComputedStyle(document.documentElement).getPropertyValue('--font-family').trim() || 'Inter, sans-serif';
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const adminBtn = document.getElementById('admin-menu-btn');
+      const sidebar = document.getElementById('sidebar');
+      if(adminBtn && sidebar) {
+        adminBtn.addEventListener('click', () => {
+          sidebar.classList.toggle('open');
+        });
+      }
+    });
   </script>
 </body>
 </html>

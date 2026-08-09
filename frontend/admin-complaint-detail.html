@@ -161,5 +161,17 @@
   <script src="js/admin-complaint-detail.js"></script>
   <script>lucide.createIcons();</script>
   <script src="js/theme.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const adminBtn = document.getElementById('admin-menu-btn');
+      const sidebar = document.getElementById('sidebar');
+      if(adminBtn && sidebar) {
+        adminBtn.addEventListener('click', () => {
+          sidebar.classList.toggle('open');
+        });
+      }
+    });
+  </script>
 </body>
 </html>

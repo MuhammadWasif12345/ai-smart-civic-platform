@@ -132,3 +132,56 @@ header .theme-toggle-btn:hover {
   background-color: var(--bg-secondary);
   color: var(--brand-primary);
 }
+
+/* Mobile Navigation */
+.hamburger {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 0.5rem;
+}
+@media (max-width: 768px) {
+  header .container {
+    padding: 0 1rem;
+    position: relative;
+  }
+  .hamburger {
+    display: flex;
+    order: 1;
+  }
+  header .logo {
+    order: 2;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1rem;
+  }
+  .theme-toggle-btn {
+    order: 3;
+    margin-left: auto;
+  }
+  header .nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem;
+    box-shadow: var(--shadow);
+    gap: 1rem;
+    z-index: 999;
+  }
+  header .nav-links.active {
+    display: flex;
+  }
+  header .nav-links a {
+    width: 100%;
+    text-align: center;
+    padding: 0.75rem 0;
+  }
+}
