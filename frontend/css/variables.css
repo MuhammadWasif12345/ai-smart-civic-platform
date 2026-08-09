@@ -52,10 +52,10 @@
 
 [data-theme="dark"] {
   /* DARK MODE */
-  --bg-primary: #0b1120;
-  --bg-secondary: #111827;
-  --bg-card: #151e2f;
-  --bg-input: #1e293b;
+  --bg-primary: #09090b;
+  --bg-secondary: #18181b;
+  --bg-card: #18181b;
+  --bg-input: #27272a;
 
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
