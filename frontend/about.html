@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - AI Smart Civic Services</title>
+  
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light' || (!savedTheme && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Navigation Header -->
+  <header>
+    <div class="container">
+      <a href="index.html" class="logo">
+        <i data-lucide="shield-check"></i>
+        AI Smart Civic <span style="font-size:0.6rem; margin-left:0.5rem; background:var(--primary-color); color:white; padding:0.2rem 0.4rem; border-radius:4px;">AI Powered</span>
+      </a>
+      <div class="nav-links">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Night Mode">
+          <i data-lucide="moon" id="theme-icon"></i>
+        </button>
+        <a href="index.html">Citizen Portal</a>
+        <a href="track-complaint.html">Track Ticket</a>
+        <a href="about.html" style="color: #f8fafc;">About</a>
+        <a href="admin-login.html" class="btn btn-outline" style="padding: 0.4rem 1rem;">Admin Login</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: 4rem; padding-bottom: 4rem;">
+    
+    <div style="text-align: center; margin-bottom: 4rem;">
+      <h1>About the Platform</h1>
+      <p style="font-size: 1.25rem; max-width: 600px; margin: 0 auto; color: var(--text-secondary);">
+        Technical specification and workflow of the AI Smart Civic Services platform.
+      </p>
+    </div>
+
+    <section>
+      <h2 style="margin-bottom: 2rem;">Project Overview</h2>
+      <div class="card" style="margin-bottom: 3rem;">
+        <p><strong>AI Smart Civic Services</strong> is an end-to-end civic complaint and service-management application. Citizens submit local-service complaints, while the system uses AI to understand the complaint and support service teams in classification, prioritization and management.</p>
+        <p>The project connects classroom learning with a practical software product. Students demonstrate programming, problem-solving, AI integration, data analysis, system architecture, interface design and deployment.</p>
+        <p><strong>Core objective:</strong> Build a working platform where a citizen can submit a civic complaint and the system can intelligently analyze it, store the result, and make the information useful to administrators or service teams.</p>
+      </div>
+
+      <h2 style="margin-bottom: 2rem;">System Behavior Step-by-Step</h2>
+      <div class="card" style="margin-bottom: 4rem;">
+        <ol style="padding-left: 1.5rem; line-height: 1.8;">
+          <li><strong>1. Submit:</strong> Citizen enters complaint text and optionally uploads an image.</li>
+          <li><strong>2. Analyze:</strong> AI analyzes the complaint content (Text + Image).</li>
+          <li><strong>3. Classify:</strong> Predict category such as Water/Drainage or etc.</li>
+          <li><strong>4. Prioritize:</strong> Estimation of priority.</li>
+          <li><strong>5. Summarize:</strong> Generate a short actionable summary for the service team.</li>
+          <li><strong>6. Store:</strong> Save complaint, location, date, status, category, priority and AI output.</li>
+          <li><strong>7. Manage:</strong> Administrator can view, filter, assign and update complaints.</li>
+          <li><strong>8. Analyze:</strong> Dashboard displays statistics, distributions and trends.</li>
+        </ol>
+      </div>
+
+      <div style="text-align: center; margin-top: 2rem; padding: 2rem; background-color: var(--surface-color); border-radius: 8px; border: 1px dashed var(--border-color);">
+        <p style="font-family: monospace; font-size: 1.1rem; color: var(--primary-color);">Complaint text &rarr; preprocessing/model/API &rarr; category + priority + summary &rarr; stored AI result &rarr; administrator dashboard</p>
+      </div>
+
+    </section>
+  </main>
+
+  <script src="js/theme.js"></script>
+</body>
+</html>

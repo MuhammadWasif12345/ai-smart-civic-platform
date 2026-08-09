@@ -1,0 +1,27 @@
+# Web Framework
+fastapi
+uvicorn
+python-multipart
+
+# Database and ORM
+sqlalchemy
+psycopg2-binary; sys_platform == 'linux'
+
+# Validation and settings
+pydantic
+pydantic-settings
+
+# Authentication
+python-jose[cryptography]
+passlib[bcrypt]
+
+# Data Analysis & Statistics
+pandas
+numpy
+
+# AI (Local + External)
+transformers
+torch
+sumy
+google-genai
+python-dotenv

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Complaint - AI Smart Civic Services</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* Timeline styles specific to this page */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin-top: 1.5rem;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background-color: var(--border-color);
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2.4rem;
+      top: 0.25rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      border: 3px solid white;
+    }
+    .timeline-date {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+    .timeline-status {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+  </style>
+  <script>
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light' || (!savedTheme && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  </script>
+</head>
+<body>
+
+    <header>
+    <div class="container">
+      <a href="index.html" class="logo">
+        <i data-lucide="shield-check"></i>
+        AI Smart Civic <span style="font-size:0.6rem; margin-left:0.5rem; background:var(--primary-color); color:white; padding:0.2rem 0.4rem; border-radius:4px;">AI Powered</span>
+      </a>
+      <div class="nav-links">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Night Mode">
+          <i data-lucide="moon" id="theme-icon"></i>
+        </button>
+        <a href="index.html">Citizen Portal</a>
+        <a href="track-complaint.html">Track Ticket</a>
+        <a href="admin-login.html" class="btn btn-outline" style="padding: 0.4rem 1rem;">Admin Login</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: 3rem; padding-bottom: 3rem; max-width: 800px;">
+    
+    <div class="card" id="searchCard" style="margin-bottom: 2rem;">
+      <h2>Track Your Complaint</h2>
+      <p style="margin-bottom: 2rem;">Enter your Complaint ID to see its current status.</p>
+      
+      <form id="trackForm" style="display: flex; gap: 1rem;">
+        <div style="flex: 1;">
+          <input type="text" id="complaint_id" class="form-control" placeholder="e.g., c8f1a2e4-9b3d-4a11-..." required>
+        </div>
+        <button type="submit" class="btn btn-primary">Track <i data-lucide="search"></i></button>
+      </form>
+      <div id="searchError" class="error-text" style="margin-top: 1rem; font-size: 1rem;"></div>
+    </div>
+
+    <!-- Results Card (Hidden by default) -->
+    <div class="card" id="resultCard" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem;">
+        <div>
+          <h3 style="margin-bottom: 0.25rem;">Complaint Status</h3>
+          <p style="font-size: 0.85rem; font-family: monospace;" id="displayId"></p>
+        </div>
+        <div id="displayStatusBadge"></div>
+      </div>
+
+      <!-- Detail Grid -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; background-color: #F9FAFB; padding: 1.5rem; border-radius: var(--border-radius);">
+        <div>
+          <strong style="color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase;">Category</strong>
+          <div id="displayCategory" style="font-weight: 500; margin-top: 0.25rem;"></div>
+        </div>
+        <div>
+          <strong style="color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase;">Priority</strong>
+          <div id="displayPriority" style="margin-top: 0.25rem;"></div>
+        </div>
+        <div style="grid-column: span 2;">
+          <strong style="color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase;">Assigned Department</strong>
+          <div id="displayDepartment" style="font-weight: 500; margin-top: 0.25rem;"></div>
+        </div>
+      </div>
+
+      <h4>Timeline</h4>
+      <div id="timelineContainer" class="timeline">
+        <!-- History items injected here by JS -->
+      </div>
+    </div>
+
+  </main>
+
+  <script src="js/track-complaint.js"></script>
+  <script>lucide.createIcons();</script>
+  <script src="js/theme.js"></script>
+</body>
+</html>

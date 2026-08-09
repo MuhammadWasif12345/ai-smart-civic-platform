@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal - AI Smart Civic Services</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  
+  <style>
+    /* Admin Login Specific Styles */
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+      background-color: var(--bg-primary);
+    }
+    
+    .login-wrapper {
+      display: flex;
+      flex: 1;
+      width: 100%;
+    }
+
+    .login-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4rem;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+      border-right: 1px solid var(--border);
+    }
+
+    .login-left h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    .login-left p {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 500px;
+      line-height: 1.6;
+    }
+
+    .login-right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem;
+      background-color: var(--bg-primary);
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 450px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius-lg);
+      padding: 2.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .login-card h2 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .demo-accounts {
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px dashed var(--border);
+    }
+
+    .demo-account-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 1rem;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: all var(--transition-speed) ease;
+      color: var(--text-primary);
+    }
+
+    .demo-account-btn:hover {
+      background-color: var(--bg-primary);
+      border-color: var(--brand-primary);
+    }
+
+    .demo-account-btn .role-badge {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      background: var(--brand-primary);
+      color: white;
+      border-radius: 4px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    @media (max-width: 900px) {
+      .login-left {
+        display: none;
+      }
+      .login-right {
+        padding: 2rem 1rem;
+      }
+    }
+  </style>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light' || (!savedTheme && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  </script>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <a href="index.html" class="logo">
+        <i data-lucide="shield-check"></i>
+        AI Smart Civic <span style="font-size:0.6rem; margin-left:0.5rem; background:var(--brand-primary); color:white; padding:0.2rem 0.4rem; border-radius:4px;">AI Powered</span>
+      </a>
+      <div class="nav-links">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Night Mode">
+          <i data-lucide="moon" id="theme-icon"></i>
+        </button>
+        <a href="index.html#citizen-portal">Citizen Portal</a>
+        <a href="track-complaint.html">Track Ticket</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="login-wrapper">
+    <div class="login-left">
+      <div style="margin-bottom: 2rem;">
+        <span style="display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--success); font-weight: 700; margin-bottom: 1rem;">
+          <i data-lucide="cpu" style="width: 16px; height: 16px;"></i> AI-Powered Civic Services
+        </span>
+      </div>
+      <h1>Smarter Services for<br><span style="color: var(--brand-primary);">Better Communities</span></h1>
+      <p>A modern platform that helps municipal teams manage, prioritize, and resolve civic issues efficiently with AI.</p>
+    </div>
+
+    <div class="login-right">
+      <div class="login-card">
+        <h2>
+          <i data-lucide="shield-check" style="color: var(--success);"></i>
+          Portal Access
+        </h2>
+        
+        <form id="loginForm">
+          <div class="form-group">
+            <label class="form-label" for="username">Username</label>
+            <input type="text" id="username" class="form-control" placeholder="e.g. admin" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+          </div>
+
+          <div id="loginError" class="error-text" style="margin-bottom: 1rem;"></div>
+          
+          <button type="submit" class="btn btn-primary" style="width: 100%;" id="loginBtn">
+            Sign In &rarr;
+          </button>
+        </form>
+
+        <div class="demo-accounts">
+          <h4 style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 1rem; display: flex; justify-content: space-between;">
+            <span><i data-lucide="zap" style="width: 14px; display: inline; vertical-align: text-bottom;"></i> 1-Click Demo Accounts</span>
+            <span>Instant Access</span>
+          </h4>
+          
+          <button class="demo-account-btn" onclick="demoLogin('admin', 'admin123')">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <i data-lucide="user" style="color: var(--brand-primary);"></i>
+              <span style="font-weight: 600;">System Administrator</span>
+              <span class="role-badge">Super Admin</span>
+            </div>
+            <i data-lucide="arrow-right" style="width: 16px; color: var(--text-muted);"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    // Demo login automation
+    function demoLogin(username, password) {
+      document.getElementById('username').value = username;
+      document.getElementById('password').value = password;
+      document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+    }
+
+    // Login Form Submission
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const u = document.getElementById('username').value;
+      const p = document.getElementById('password').value;
+      const errorDiv = document.getElementById('loginError');
+      const btn = document.getElementById('loginBtn');
+      
+      errorDiv.style.display = 'none';
+      btn.disabled = true;
+      btn.innerHTML = '<i data-lucide="loader" class="loading-spinner" style="display:inline-block;"></i> Authenticating...';
+      
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: u, password: p })
+        });
+        
+        if (!response.ok) {
+          const errData = await response.json();
+          throw new Error(errData.detail || 'Login failed');
+        }
+        
+        const data = await response.json();
+        ApiClient.setToken(data.access_token);
+        
+        // Redirect to dashboard on success
+        window.location.href = 'admin-dashboard.html';
+        
+      } catch (err) {
+        errorDiv.textContent = err.message;
+        errorDiv.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Sign In &rarr;';
+        if (window.lucide) lucide.createIcons();
+      }
+    });
+  </script>
+  <script src="js/theme.js"></script>
+</body>
+</html>

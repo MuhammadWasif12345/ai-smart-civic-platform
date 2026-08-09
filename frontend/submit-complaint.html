@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit a Complaint - AI Smart Civic Services</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/chatbot.css">
+  
+  <style>
+    /* Custom styles for the drag and drop area */
+    .file-upload-area {
+      border: 2px dashed var(--border);
+      border-radius: var(--border-radius-lg);
+      padding: 2rem;
+      text-align: center;
+      transition: all var(--transition-speed) ease;
+      background-color: var(--bg-primary);
+      cursor: pointer;
+      position: relative;
+    }
+    .file-upload-area:hover, .file-upload-area.dragover {
+      border-color: var(--brand-primary);
+      background-color: rgba(34, 184, 240, 0.05);
+    }
+    .file-upload-area i {
+      width: 48px;
+      height: 48px;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    .file-upload-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .image-preview-container {
+      display: none;
+      margin-top: 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius);
+      padding: 0.5rem;
+      background-color: var(--bg-card);
+      align-items: center;
+      justify-content: space-between;
+    }
+    .image-preview-container img {
+      max-height: 80px;
+      border-radius: 4px;
+    }
+
+    /* Timeline styles */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      position: relative;
+      padding-left: 2rem;
+      margin: 2rem 0;
+      text-align: left;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 5px;
+      bottom: 5px;
+      width: 2px;
+      background-color: var(--border);
+    }
+    .timeline-item {
+      position: relative;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2rem;
+      top: 4px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: var(--bg-card);
+      border: 2px solid var(--border);
+      z-index: 1;
+    }
+    .timeline-item.active::before {
+      border-color: var(--brand-primary);
+      background-color: var(--brand-primary);
+    }
+    .timeline-item.completed::before {
+      border-color: var(--success);
+      background-color: var(--success);
+    }
+
+    .success-ai-box {
+      background-color: rgba(15, 23, 42, 0.03);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      border-radius: var(--border-radius-lg);
+      text-align: left;
+      margin-bottom: 2rem;
+    }
+    [data-theme="dark"] .success-ai-box {
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+  </style>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light' || (!savedTheme && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Navigation Header -->
+  <header>
+    <div class="container">
+      <a href="index.html" class="logo">
+        <i data-lucide="shield-check"></i>
+        AI Smart Civic <span style="font-size:0.6rem; margin-left:0.5rem; background:var(--brand-primary); color:white; padding:0.2rem 0.4rem; border-radius:4px;">AI Powered</span>
+      </a>
+      <div class="nav-links">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Night Mode">
+          <i data-lucide="moon" id="theme-icon"></i>
+        </button>
+        <a href="index.html">Citizen Portal</a>
+        <a href="track-complaint.html">Track Ticket</a>
+        <a href="about.html">About / How It Works</a>
+        <a href="admin-login.html" class="btn btn-outline" style="padding: 0.4rem 1rem;">Admin Login</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: 4rem; padding-bottom: 4rem; max-width: 900px; display: flex; gap: 2rem; flex-wrap: wrap;">
+    
+    <!-- LOADING OVERLAY -->
+    <div id="loadingOverlay" class="loading-overlay">
+      <div class="large-spinner"></div>
+      <h3 style="margin-bottom: 0.5rem;">Analyzing complaint...</h3>
+      <p style="color: var(--text-secondary);">Please wait while AI processes your report.</p>
+    </div>
+
+    <!-- MAIN FORM SECTION -->
+    <div class="card" id="formCard" style="flex: 2; min-width: 300px;">
+      <h2>Submit a Complaint</h2>
+      <p style="margin-bottom: 2rem; color: var(--text-secondary);">Tell us what happened and where. Our AI will analyze your report and route it to the appropriate service team.</p>
+      
+      <form id="complaintForm">
+        
+        <div class="form-group">
+          <label class="form-label" for="description">Problem Description *</label>
+          <textarea 
+            id="description" 
+            class="form-control" 
+            placeholder="e.g., There is a large pothole near the intersection of Main St and 4th Ave that is causing cars to swerve dangerously..."
+            required
+          ></textarea>
+          <div id="descriptionError" class="error-text">Please provide a detailed description.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="location">Location *</label>
+          <input type="text" id="location" class="form-control" placeholder="Address, intersection, or landmark" required>
+          <div id="locationError" class="error-text">Please provide a location.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="citizen_contact">Contact Information (Optional)</label>
+          <input type="text" id="citizen_contact" class="form-control" placeholder="Email or phone number for status updates">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Photo Evidence (Optional)</label>
+          
+          <div class="file-upload-area" id="dropArea">
+            <input type="file" id="image_upload" class="file-upload-input" accept="image/png, image/jpeg, image/webp">
+            <i data-lucide="upload-cloud"></i>
+            <h4 style="margin-bottom: 0.5rem;">Upload Photo</h4>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0;">Drag & drop an image here or browse files</p>
+            <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0;">JPG, PNG, WEBP &bull; Max 10 MB</p>
+          </div>
+          <div id="fileError" class="error-text">Invalid file or size too large.</div>
+          
+          <div class="image-preview-container" id="imagePreviewContainer">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <img id="imagePreview" src="" alt="Preview">
+              <span id="imageName" style="font-size: 0.9rem; color: var(--text-secondary);">filename.jpg</span>
+            </div>
+            <button type="button" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" id="removeImageBtn">Remove</button>
+          </div>
+        </div>
+
+        <div id="serverError" class="error-text" style="margin-bottom: 1rem; font-size: 1rem;"></div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 1rem;" id="submitBtn">
+          Analyze & Submit Complaint &rarr;
+        </button>
+      </form>
+    </div>
+
+    <!-- AI EXPLANATION SIDEBAR -->
+    <div id="aiExplanation" style="flex: 1; min-width: 250px;">
+      <div class="card" style="background-color: var(--bg-secondary); border-color: transparent;">
+        <h3 style="display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="cpu" style="color: var(--brand-primary);"></i> Smart Routing</h3>
+        <p style="color: var(--text-secondary); font-size: 0.95rem;">AI will analyze your complaint to suggest:</p>
+        <ul style="list-style: none; padding-left: 0; color: var(--text-primary); font-size: 0.95rem; display: flex; flex-direction: column; gap: 0.5rem;">
+          <li style="display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="check" style="color: var(--success); width: 16px;"></i> Category</li>
+          <li style="display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="check" style="color: var(--success); width: 16px;"></i> Priority</li>
+          <li style="display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="check" style="color: var(--success); width: 16px;"></i> Department</li>
+          <li style="display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="check" style="color: var(--success); width: 16px;"></i> Actionable Summary</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SUCCESS SCREEN (Hidden by default) -->
+    <div class="card" id="successCard" style="display: none; text-align: center; width: 100%; max-width: 700px; margin: 0 auto;">
+      
+      <div style="color: var(--success); margin-bottom: 1rem;">
+        <i data-lucide="check-circle" style="width: 64px; height: 64px;"></i>
+      </div>
+      <h2>Complaint Submitted Successfully</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 2rem;">Your report has been received and is being processed.</p>
+      
+      <!-- Complaint ID Box -->
+      <div style="background-color: var(--bg-primary); border: 1px dashed var(--border); padding: 1.5rem; border-radius: var(--border-radius); margin-bottom: 2rem;">
+        <p style="font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-bottom: 0.5rem;">Complaint ID</p>
+        <h3 id="successId" style="font-family: monospace; color: var(--brand-primary); margin-bottom: 1rem; user-select: all; word-break: break-all;"></h3>
+        <button class="btn btn-outline" id="copyIdBtn" style="padding: 0.4rem 1rem; font-size: 0.9rem;">
+          <i data-lucide="copy" style="width: 16px;"></i> Copy ID
+        </button>
+        <span id="copyFeedback" style="color: var(--success); font-size: 0.85rem; margin-left: 0.5rem; opacity: 0; transition: opacity 0.3s;">Copied ✓</span>
+      </div>
+
+      <!-- Two column layout for details and timeline -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; text-align: left; margin-bottom: 2rem;">
+        
+        <!-- AI Details -->
+        <div>
+          <h4 style="color: var(--text-muted); text-transform: uppercase; font-size: 0.85rem; margin-bottom: 1rem;">AI Routing Details</h4>
+          <div class="success-ai-box">
+            <div style="margin-bottom: 0.75rem;">
+              <strong style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Category</strong>
+              <span id="successCategory" style="font-weight: 600;"></span>
+            </div>
+            <div style="margin-bottom: 0.75rem;">
+              <strong style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Priority</strong>
+              <span id="successPriority"></span>
+            </div>
+            <div style="margin-bottom: 0.75rem;">
+              <strong style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Department</strong>
+              <span id="successDepartment" style="font-weight: 600;"></span>
+            </div>
+            <div>
+              <strong style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Summary</strong>
+              <span id="successSummary" style="font-size: 0.9rem; color: var(--text-secondary);"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timeline -->
+        <div>
+          <h4 style="color: var(--text-muted); text-transform: uppercase; font-size: 0.85rem; margin-bottom: 0;">Tracking Timeline</h4>
+          <div class="timeline" id="successTimeline">
+            <div class="timeline-item completed">
+              <strong>Complaint Submitted</strong>
+            </div>
+            <div class="timeline-item completed">
+              <strong>AI Analysis Complete</strong>
+            </div>
+            <div class="timeline-item active" id="tlAssigned">
+              <strong>Assigned to Department</strong>
+            </div>
+            <div class="timeline-item" id="tlInProgress">
+              <strong style="color: var(--text-muted);">In Progress</strong>
+            </div>
+            <div class="timeline-item" id="tlResolved">
+              <strong style="color: var(--text-muted);">Resolved</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 1rem; justify-content: center;">
+        <a href="track-complaint.html" class="btn btn-outline" id="trackLinkBtn">Track Complaint</a>
+        <button class="btn btn-primary" onclick="window.location.reload();">Submit Another Report</button>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="js/submit-complaint.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/chatbot.js"></script>
+</body>
+</html>

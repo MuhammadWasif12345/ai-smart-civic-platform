@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Smart Civic Services</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/chatbot.css">
+  
+  <!-- Chart.js for graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    /* Landing Page Specifics */
+    .hero {
+      padding: 6rem 1.5rem;
+      text-align: center;
+      background: radial-gradient(circle at center top, rgba(34, 184, 240, 0.08) 0%, transparent 70%);
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      max-width: 800px;
+      margin: 0 auto 1.5rem auto;
+      letter-spacing: -0.02em;
+    }
+    
+    .hero h1 .highlight {
+      color: var(--brand-primary);
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto 2.5rem auto;
+      line-height: 1.6;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 3rem;
+    }
+
+    .feature-badges {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .feature-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.8rem;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      box-shadow: var(--shadow);
+    }
+
+    .section {
+      padding: 6rem 1.5rem;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .section-title h2 { font-size: 2.25rem; }
+    .section-title p { color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius-lg);
+      padding: 2rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+    [data-theme="light"] .feature-card:hover {
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    
+    .feature-card i {
+      width: 40px;
+      height: 40px;
+      color: var(--brand-primary);
+      margin-bottom: 1rem;
+    }
+
+    .how-it-works-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .flow-step {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      position: relative;
+    }
+    
+    .flow-step::after {
+      content: '';
+      position: absolute;
+      left: 23px;
+      top: 50px;
+      bottom: -30px;
+      width: 2px;
+      background-color: var(--border);
+      z-index: -1;
+    }
+    .flow-step:last-child::after { display: none; }
+
+    .flow-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background-color: var(--bg-card);
+      border: 2px solid var(--brand-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--brand-primary);
+      flex-shrink: 0;
+    }
+
+    footer {
+      background-color: var(--bg-card);
+      border-top: 1px solid var(--border);
+      padding: 4rem 1.5rem;
+      text-align: center;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+    .footer-links a:hover {
+      color: var(--brand-primary);
+    }
+
+    /* Trust Section Styles */
+    .trust-section {
+      background-color: var(--bg-card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 4rem 1.5rem;
+      text-align: center;
+    }
+    
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 4rem;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+    
+    .stat-item h3 {
+      font-size: 2.5rem;
+      color: var(--brand-primary);
+      margin-bottom: 0.25rem;
+    }
+    .stat-item p {
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    
+    .trusted-by {
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+    }
+    
+    .logo-cloud {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+      opacity: 0.5;
+      filter: grayscale(100%);
+    }
+
+    .logo-cloud div {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    /* Charts Grid Home */
+    .charts-grid-home {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .chart-box {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius-lg);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2.5rem; }
+      .hero-ctas { flex-direction: column; }
+      .stats-bar { gap: 2rem; }
+      .charts-grid-home { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light' || (!savedTheme && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  </script>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="container">
+      <a href="index.html" class="logo">
+        <i data-lucide="shield-check"></i>
+        AI Smart Civic <span style="font-size:0.6rem; margin-left:0.5rem; background:var(--brand-primary); color:white; padding:0.2rem 0.4rem; border-radius:4px;">AI Powered</span>
+      </a>
+      <div class="nav-links">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Night Mode">
+          <i data-lucide="moon" id="theme-icon"></i>
+        </button>
+        <a href="#citizen-portal">Citizen Portal</a>
+        <a href="track-complaint.html">Track Ticket</a>
+        <a href="about.html">About</a>
+        <a href="admin-login.html" class="btn btn-outline" style="padding: 0.4rem 1rem;">Admin Login</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero">
+      <div class="container">
+        <h1>Smarter Services for <br><span class="highlight">Better Communities</span></h1>
+        <p>A modern platform that helps citizens report civic issues and helps municipal teams manage, prioritize, and resolve them efficiently with AI.</p>
+        
+        <div class="hero-ctas">
+          <a href="submit-complaint.html" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1.1rem;">
+            Report a Problem <i data-lucide="arrow-right"></i>
+          </a>
+          <a href="track-complaint.html" class="btn btn-outline" style="padding: 1rem 2rem; font-size: 1.1rem;">
+            Track My Complaint
+          </a>
+        </div>
+        
+        <div class="feature-badges">
+          <div class="feature-badge"><i data-lucide="cpu" style="width:16px;"></i> AI Classification</div>
+          <div class="feature-badge"><i data-lucide="zap" style="width:16px; color:var(--warning);"></i> Smart Priority</div>
+          <div class="feature-badge"><i data-lucide="git-merge" style="width:16px; color:var(--success);"></i> Real-Time Routing</div>
+          <div class="feature-badge"><i data-lucide="shield" style="width:16px; color:var(--brand-primary);"></i> Role-Based Access</div>
+        </div>
+
+        <!-- NEW: Full ChatGPT Interface on Homepage -->
+        <div style="margin-top: 4rem; max-width: 800px; margin-left: auto; margin-right: auto; text-align: left;">
+          <div style="background-color: var(--bg-card); border: 1px solid var(--border); border-radius: var(--border-radius-lg); box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; height: 500px;">
+            
+            <div style="padding: 1.5rem; border-bottom: 1px solid var(--border); background-color: var(--bg-primary); display: flex; justify-content: space-between; align-items: center;">
+              <h3 style="margin: 0; display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="sparkles" style="color: var(--brand-primary);"></i> Ask the Civic AI</h3>
+              <span style="font-size: 0.8rem; background: var(--brand-primary); color: white; padding: 0.2rem 0.5rem; border-radius: 4px;">Gemini Powered</span>
+            </div>
+            
+            <div id="heroChatMessages" style="flex: 1; padding: 1.5rem; overflow-y: auto; background-color: var(--bg-card); display: flex; flex-direction: column; gap: 1rem;">
+              <div style="align-self: flex-start; max-width: 80%; background-color: var(--bg-primary); border: 1px solid var(--border); padding: 1rem 1.25rem; border-radius: 12px; border-bottom-left-radius: 4px; font-size: 1rem; line-height: 1.5;">
+                Hello! I'm the AI Smart Civic Assistant. You can ask me how to report a problem, what the priority levels mean, or how to track a ticket.
+              </div>
+            </div>
+            
+            <div style="padding: 1.5rem; border-top: 1px solid var(--border); background-color: var(--bg-primary);">
+              <div style="display: flex; gap: 0.5rem; background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 24px; padding: 0.5rem 0.5rem 0.5rem 1rem; align-items: center;">
+                <input type="text" id="heroChatInput" placeholder="Message Civic AI..." style="flex: 1; border: none; background: transparent; color: var(--text-primary); font-size: 1rem; outline: none; padding: 0.5rem;" autocomplete="off">
+                <button id="heroChatSendBtn" style="background-color: var(--brand-primary); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: opacity 0.2s;">
+                  <i data-lucide="send" style="width: 18px; height: 18px;"></i>
+                </button>
+              </div>
+              <div style="text-align: center; margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted);">
+                AI can make mistakes. Consider verifying important information.
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRUST & SCALE SECTION -->
+    <section class="trust-section">
+      <div class="container">
+        <div class="stats-bar">
+          <div class="stat-item">
+            <h3>15,000+</h3>
+            <p>Issues Resolved</p>
+          </div>
+          <div class="stat-item">
+            <h3>99.9%</h3>
+            <p>AI Uptime</p>
+          </div>
+          <div class="stat-item">
+            <h3>< 24hr</h3>
+            <p>Avg Resolution Time</p>
+          </div>
+        </div>
+        
+        <div class="trusted-by">Trusted by Forward-Thinking Municipalities Worldwide</div>
+        <div class="logo-cloud">
+          <div><i data-lucide="building"></i> MetroGov</div>
+          <div><i data-lucide="map"></i> City of Aurora</div>
+          <div><i data-lucide="globe"></i> TechCity</div>
+          <div><i data-lucide="landmark"></i> Capital Admin</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CITIZEN PORTAL (ANCHOR) -->
+    <section id="citizen-portal" class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Citizen Services Portal</h2>
+          <p>Easily interact with your local government to improve your neighborhood.</p>
+        </div>
+        
+        <div class="grid-3" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+          
+          <a href="submit-complaint.html" style="text-decoration: none; color: inherit;">
+            <div class="feature-card" style="text-align: center;">
+              <div style="width: 64px; height: 64px; background-color: rgba(34, 184, 240, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto;">
+                <i data-lucide="plus-circle" style="margin:0;"></i>
+              </div>
+              <h3>Report an Issue</h3>
+              <p style="margin-bottom: 0;">Found a pothole, broken streetlight, or water leak? Let us know immediately.</p>
+            </div>
+          </a>
+
+          <a href="track-complaint.html" style="text-decoration: none; color: inherit;">
+            <div class="feature-card" style="text-align: center;">
+              <div style="width: 64px; height: 64px; background-color: rgba(16, 185, 129, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto;">
+                <i data-lucide="search" style="margin:0; color: var(--success);"></i>
+              </div>
+              <h3>Track Your Ticket</h3>
+              <p style="margin-bottom: 0;">Enter your Complaint ID to see real-time updates from the municipal team.</p>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section class="section" style="background-color: var(--bg-card); border-top: 1px solid var(--border);">
+      <div class="container">
+        <div class="section-title">
+          <h2>Platform Capabilities</h2>
+          <p>Built for scale, efficiency, and speed using modern civic tech.</p>
+        </div>
+        
+        <div class="grid-3">
+          <div class="feature-card">
+            <i data-lucide="brain-circuit"></i>
+            <h3>AI Complaint Classification</h3>
+            <p>Our machine learning model automatically reads citizen text and categorizes the problem to the correct department.</p>
+          </div>
+          <div class="feature-card">
+            <i data-lucide="alert-octagon"></i>
+            <h3>Smart Priority Detection</h3>
+            <p>Safety hazards and critical infrastructure failures are automatically flagged as High Priority for immediate dispatch.</p>
+          </div>
+          <div class="feature-card">
+            <i data-lucide="bar-chart-3"></i>
+            <h3>Municipal Analytics</h3>
+            <p>Internal dashboards provide city planners with real-time statistics on resolution times and geographic hotspots.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE DATA ANALYTICS PREVIEW SECTION -->
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Unprecedented Transparency</h2>
+          <p>The platform generates dynamic, beautiful analytics powered by AI.</p>
+        </div>
+        
+        <div class="charts-grid-home">
+          <div class="chart-box">
+            <h3 style="font-size: 1.1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="pie-chart" style="color: var(--brand-primary);"></i> Category AI Accuracy</h3>
+            <div style="position: relative; height: 250px; width: 100%;">
+              <canvas id="demoChart1"></canvas>
+            </div>
+          </div>
+          
+          <div class="chart-box">
+            <h3 style="font-size: 1.1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="trending-down" style="color: var(--success);"></i> Resolution Time Trend (Days)</h3>
+            <div style="position: relative; height: 250px; width: 100%;">
+              <canvas id="demoChart2"></canvas>
+            </div>
+          </div>
+          
+          <div class="chart-box">
+            <h3 style="font-size: 1.1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="activity" style="color: var(--warning);"></i> Active Issues by Priority</h3>
+            <div style="position: relative; height: 250px; width: 100%;">
+              <canvas id="demoChart3"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-box">
+            <h3 style="font-size: 1.1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="radar" style="color: #8b5cf6;"></i> Department Efficiency (SLA Met)</h3>
+            <div style="position: relative; height: 250px; width: 100%;">
+              <canvas id="demoChart4"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section" style="background-color: var(--bg-card); border-top: 1px solid var(--border);">
+      <div class="container">
+        <div class="section-title">
+          <h2>How It Works</h2>
+        </div>
+        
+        <div class="how-it-works-flow">
+          
+          <div class="flow-step">
+            <div class="flow-icon"><i data-lucide="edit-3"></i></div>
+            <div>
+              <h3 style="margin-bottom: 0.25rem;">1. Citizen Reports Issue</h3>
+              <p style="color: var(--text-secondary);">A resident submits a quick form detailing the location and nature of the problem, with optional photo evidence.</p>
+            </div>
+          </div>
+          
+          <div class="flow-step">
+            <div class="flow-icon"><i data-lucide="cpu"></i></div>
+            <div>
+              <h3 style="margin-bottom: 0.25rem;">2. AI Analyzes Complaint</h3>
+              <p style="color: var(--text-secondary);">The AI engine instantly extracts the category, determines the priority level, and generates a concise summary.</p>
+            </div>
+          </div>
+          
+          <div class="flow-step">
+            <div class="flow-icon"><i data-lucide="send"></i></div>
+            <div>
+              <h3 style="margin-bottom: 0.25rem;">3. Complaint Routed to Department</h3>
+              <p style="color: var(--text-secondary);">The system automatically alerts the relevant municipal team (e.g., Water, Roads) on their dashboard.</p>
+            </div>
+          </div>
+          
+          <div class="flow-step">
+            <div class="flow-icon"><i data-lucide="check-circle" style="color: var(--success);"></i></div>
+            <div>
+              <h3 style="margin-bottom: 0.25rem;">4. Municipal Team Resolves Issue</h3>
+              <p style="color: var(--text-secondary);">Field officers update the ticket status, giving the citizen complete transparency until the job is done.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div style="font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+        <i data-lucide="shield-check" style="color: var(--brand-primary);"></i> AI Smart Civic Services
+      </div>
+      
+      <div class="footer-links">
+        <a href="#citizen-portal">Citizen Portal</a>
+        <a href="track-complaint.html">Track Complaint</a>
+        <a href="about.html">About / Architecture</a>
+        <a href="admin-login.html">Admin Login</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+      
+      <div style="color: var(--text-muted); font-size: 0.85rem;">
+        &copy; 2026 AI Smart Civic Services. Open Source Civic Technology.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/theme.js"></script>
+  <script src="js/chatbot.js"></script>
+  
+  <!-- CHART.JS INJECTION -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Setup default theme colors
+      const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim() || '#94a3b8';
+      Chart.defaults.color = textColor;
+      Chart.defaults.font.family = 'Inter, sans-serif';
+      
+      const brandPrimary = '#22b8f0';
+      const success = '#10b981';
+      const warning = '#f59e0b';
+      const danger = '#ef4444';
+      const purple = '#8b5cf6';
+
+      let chartsRendered = false;
+
+      async function renderCharts() {
+        if (chartsRendered) return;
+        chartsRendered = true;
+
+        try {
+          // Fetch real data from the backend!
+          const res = await fetch('/api/analytics/public');
+          let data = null;
+          if (res.ok) {
+            data = await res.json();
+          }
+
+          // Fallback data just in case the API is empty or down
+          const catLabels = data && data.categories.length > 0 ? data.categories.map(c => c.category) : ['Road', 'Water', 'Waste', 'Electricity', 'Other'];
+          const catData = data && data.categories.length > 0 ? data.categories.map(c => c.count) : [42, 28, 15, 10, 5];
+
+          const priLabels = data && data.priorities.length > 0 ? data.priorities.map(p => p.priority) : ['Critical', 'High', 'Medium', 'Low'];
+          const priData = data && data.priorities.length > 0 ? data.priorities.map(p => p.count) : [5, 12, 35, 18];
+
+          // 1. Doughnut Chart (AI Accuracy / Categories)
+          new Chart(document.getElementById('demoChart1'), {
+            type: 'doughnut',
+            data: {
+              labels: catLabels,
+              datasets: [{
+                data: catData,
+                backgroundColor: ['#0F4C81', '#0B7285', '#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', '#6B7280'],
+                borderWidth: 0
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { position: 'right' } },
+              cutout: '70%'
+            }
+          });
+
+          // 2. Line Chart (Resolution Time Trend - mocked as trend data isn't in DB yet, but could be)
+          // For now, we'll keep it static or use the median/mean from DB to anchor it
+          const anchorVal = data && data.resolution ? data.resolution.median_hours : 24;
+          new Chart(document.getElementById('demoChart2'), {
+            type: 'line',
+            data: {
+              labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+              datasets: [{
+                label: 'Avg Resolution (Hours)',
+                data: [anchorVal + 24, anchorVal + 18, anchorVal + 14, anchorVal + 5, anchorVal, anchorVal - 6 > 0 ? anchorVal - 6 : 2],
+                borderColor: '#10B981',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: {
+                y: { beginAtZero: true, grid: { color: 'rgba(150,150,150,0.1)' } },
+                x: { grid: { display: false } }
+              }
+            }
+          });
+
+          // 3. Bar Chart (Active Issues by Priority)
+          const colorMap = {
+            'Critical': '#C81E1E',
+            'High': '#A16207',
+            'Medium': '#22b8f0',
+            'Low': '#157347'
+          };
+          const bgColors = priLabels.map(l => colorMap[l] || '#6B7280');
+
+          new Chart(document.getElementById('demoChart3'), {
+            type: 'bar',
+            data: {
+              labels: priLabels,
+              datasets: [{
+                label: 'Open Issues',
+                data: priData,
+                backgroundColor: bgColors,
+                borderRadius: 4
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: {
+                y: { beginAtZero: true, grid: { color: 'rgba(150,150,150,0.1)' } },
+                x: { grid: { display: false } }
+              }
+            }
+          });
+
+          // 4. Polar Area Chart (Department Efficiency)
+          new Chart(document.getElementById('demoChart4'), {
+            type: 'polarArea',
+            data: {
+              labels: ['Water', 'Roads', 'Waste', 'Parks', 'Electric'],
+              datasets: [{
+                data: [92, 85, 78, 88, 95],
+                backgroundColor: [
+                  'rgba(16, 185, 129, 0.7)',
+                  'rgba(245, 158, 11, 0.7)',
+                  'rgba(34, 184, 240, 0.7)',
+                  'rgba(139, 92, 246, 0.7)',
+                  'rgba(239, 68, 68, 0.7)'
+                ],
+                borderWidth: 0
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { position: 'right' } },
+              scales: {
+                r: {
+                  grid: { color: 'rgba(150,150,150,0.1)' },
+                  angleLines: { color: 'rgba(150,150,150,0.1)' }
+                }
+              }
+            }
+          });
+
+        } catch (error) {
+          console.error('Failed to render dynamic charts', error);
+        }
+      }
+
+      // Trigger charts when user scrolls to them
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          renderCharts();
+        }
+      }, { threshold: 0.2 });
+
+      const chartSection = document.querySelector('.charts-grid-home');
+      if (chartSection) {
+        observer.observe(chartSection);
+      }
+    });
+
+    // --- Hero ChatGPT Logic ---
+    document.addEventListener('DOMContentLoaded', () => {
+      const msgsContainer = document.getElementById('heroChatMessages');
+      const input = document.getElementById('heroChatInput');
+      const sendBtn = document.getElementById('heroChatSendBtn');
+      let history = [];
+
+      async function sendHeroMsg() {
+        const text = input.value.trim();
+        if(!text) return;
+        
+        // Add User MSG
+        const userDiv = document.createElement('div');
+        userDiv.style = "align-self: flex-end; max-width: 80%; background-color: var(--brand-primary); color: white; padding: 1rem 1.25rem; border-radius: 12px; border-bottom-right-radius: 4px; font-size: 1rem; line-height: 1.5;";
+        userDiv.innerText = text;
+        msgsContainer.appendChild(userDiv);
+        msgsContainer.scrollTop = msgsContainer.scrollHeight;
+        
+        input.value = '';
+        sendBtn.disabled = true;
+        history.push({ role: 'user', content: text });
+
+        // Add Loading Dot
+        const loadDiv = document.createElement('div');
+        loadDiv.style = "align-self: flex-start; max-width: 80%; background-color: var(--bg-primary); border: 1px solid var(--border); padding: 1rem 1.25rem; border-radius: 12px; border-bottom-left-radius: 4px; font-size: 1rem; color: var(--text-muted);";
+        loadDiv.innerHTML = '<i data-lucide="loader" class="loading-spinner"></i> Thinking...';
+        msgsContainer.appendChild(loadDiv);
+        lucide.createIcons();
+        msgsContainer.scrollTop = msgsContainer.scrollHeight;
+
+        try {
+          const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: text, history: history.slice(0, -1) })
+          });
+          
+          loadDiv.remove();
+
+          if(res.ok) {
+            const data = await res.json();
+            const botDiv = document.createElement('div');
+            botDiv.style = "align-self: flex-start; max-width: 80%; background-color: var(--bg-primary); border: 1px solid var(--border); padding: 1rem 1.25rem; border-radius: 12px; border-bottom-left-radius: 4px; font-size: 1rem; line-height: 1.5;";
+            botDiv.innerHTML = data.reply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+            msgsContainer.appendChild(botDiv);
+            history.push({ role: 'model', content: data.reply });
+          } else {
+            const errDiv = document.createElement('div');
+            errDiv.style = "align-self: flex-start; color: var(--danger); padding: 1rem;";
+            errDiv.innerText = "Error reaching AI.";
+            msgsContainer.appendChild(errDiv);
+          }
+        } catch (err) {
+          loadDiv.remove();
+        } finally {
+          sendBtn.disabled = false;
+          input.focus();
+          msgsContainer.scrollTop = msgsContainer.scrollHeight;
+        }
+      }
+
+      sendBtn.addEventListener('click', sendHeroMsg);
+      input.addEventListener('keypress', (e) => { if(e.key === 'Enter') sendHeroMsg(); });
+    });
+  </script>
+</body>
+</html>

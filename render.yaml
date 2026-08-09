@@ -1,0 +1,27 @@
+databases:
+  - name: civic-services-db
+    plan: free
+    databaseName: civic_services
+    user: civic_admin
+
+services:
+  - type: web
+    name: ai-smart-civic-services
+    env: python
+    plan: free
+    # The build command installs our requirements
+    buildCommand: "pip install -r backend/requirements.txt"
+    # The start command launches the FastAPI app on the port Render assigns
+    startCommand: "uvicorn backend.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: USE_LLM_API
+        value: "true"
+      - key: LLM_API_KEY
+        sync: false # You must set this manually in the Render dashboard
+      - key: SECRET_KEY
+        generateValue: true # Render automatically generates a secure string
+      - key: DATABASE_URL
+        # This automatically connects our web service to the free Postgres database we created above
+        fromDatabase:
+          name: civic-services-db
+          property: connectionString

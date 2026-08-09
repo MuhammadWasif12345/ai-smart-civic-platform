@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "description": "There is a large water leak near the main road and traffic is becoming difficult.",
+    "expected_category": "Water/Drainage",
+    "expected_priority": ["High", "Critical"]
+  },
+  {
+    "id": 2,
+    "description": "Streetlight on Block C has been off for two weeks, it's very dark at night and feels unsafe.",
+    "expected_category": "Electricity",
+    "expected_priority": ["Medium", "High"]
+  },
+  {
+    "id": 3,
+    "description": "Garbage bin outside the mosque has been overflowing for 3 days, smell is unbearable.",
+    "expected_category": "Waste/Garbage",
+    "expected_priority": ["Medium", "High"]
+  },
+  {
+    "id": 4,
+    "description": "Pothole on the main road near the school is getting bigger, a bike almost fell yesterday.",
+    "expected_category": "Road",
+    "expected_priority": ["High", "Critical"]
+  },
+  {
+    "id": 5,
+    "description": "Sewage water is coming into our street after every rain, kids can't play outside.",
+    "expected_category": "Water/Drainage",
+    "expected_priority": ["High", "Critical"]
+  },
+  {
+    "id": 6,
+    "description": "Electricity pole near the park is leaning after the storm, looks like it could fall.",
+    "expected_category": "Electricity",
+    "expected_priority": ["Critical"]
+  },
+  {
+    "id": 7,
+    "description": "No streetlights working on the entire lane for a month now.",
+    "expected_category": "Electricity",
+    "expected_priority": ["Medium"]
+  },
+  {
+    "id": 8,
+    "description": "Open manhole near the bus stop, very dangerous especially at night.",
+    "expected_category": "Safety",
+    "expected_priority": ["Critical"]
+  },
+  {
+    "id": 9,
+    "description": "Trash collection truck hasn't come to our area in over a week.",
+    "expected_category": "Waste/Garbage",
+    "expected_priority": ["Medium"]
+  },
+  {
+    "id": 10,
+    "description": "Water pipe burst outside house #45, water has been running for two days straight.",
+    "expected_category": "Water/Drainage",
+    "expected_priority": ["Critical"]
+  },
+  {
+    "id": 11,
+    "description": "Speed breaker needed near the school gate, cars go too fast during school hours.",
+    "expected_category": "Road",
+    "expected_priority": ["Medium"]
+  },
+  {
+    "id": 12,
+    "description": "Broken drain cover on the footpath, someone could easily twist an ankle.",
+    "expected_category": "Safety",
+    "expected_priority": ["Medium", "High"]
+  },
+  {
+    "id": 13,
+    "description": "Illegal dumping of construction waste on the empty plot next to the park.",
+    "expected_category": "Waste/Garbage",
+    "expected_priority": ["Low", "Medium"]
+  },
+  {
+    "id": 14,
+    "description": "Transformer near the market making loud buzzing noise and sparking sometimes.",
+    "expected_category": "Electricity",
+    "expected_priority": ["Critical"]
+  },
+  {
+    "id": 15,
+    "description": "Road markings have completely faded at the main intersection, causing confusion.",
+    "expected_category": "Road",
+    "expected_priority": ["Low"]
+  },
+  {
+    "id": 16,
+    "description": "Public park's only working streetlight also stopped working this week.",
+    "expected_category": "Electricity",
+    "expected_priority": ["Medium"]
+  },
+  {
+    "id": 17,
+    "description": "Drain overflow whenever it rains, water enters two houses on our street.",
+    "expected_category": "Water/Drainage",
+    "expected_priority": ["High", "Critical"]
+  },
+  {
+    "id": 18,
+    "description": "Stray dogs gathering near the garbage dump, residents are scared to walk at night.",
+    "expected_category": "Safety",
+    "expected_priority": ["Medium", "High"]
+  },
+  {
+    "id": 19,
+    "description": "Footpath near the hospital is broken and unusable for wheelchairs.",
+    "expected_category": "Road",
+    "expected_priority": ["Medium", "High"]
+  },
+  {
+    "id": 20,
+    "description": "General feedback: the new park benches are a nice addition, thank you.",
+    "expected_category": "Other",
+    "expected_priority": ["Low"]
+  }
+]
