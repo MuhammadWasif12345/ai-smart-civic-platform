@@ -97,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Reset errors
     document.getElementById('descriptionError').style.display = 'none';
     document.getElementById('locationError').style.display = 'none';
+    document.getElementById('contactError').style.display = 'none';
     document.getElementById('serverError').style.display = 'none';
     
     // Get values
@@ -113,6 +114,19 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('locationError').style.display = 'block';
       hasError = true;
     }
+
+    // Validate Contact Info (Email or Phone Number)
+    if (citizenContact) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      // Basic phone regex (allows optional +, numbers, spaces, dashes, parens)
+      const phoneRegex = /^\+?[0-9\s\-()]{7,15}$/;
+      
+      if (!emailRegex.test(citizenContact) && !phoneRegex.test(citizenContact)) {
+        document.getElementById('contactError').style.display = 'block';
+        hasError = true;
+      }
+    }
+
     if (hasError) return;
 
     const payload = {
