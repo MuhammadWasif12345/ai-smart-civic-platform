@@ -45,6 +45,16 @@ async def lifespan(app: FastAPI):
             db.add(new_admin)
             db.commit()
             logger.info("Default admin created successfully (username: 'admin').")
+            
+        from .models import Complaint
+        if not db.query(Complaint).first():
+            logger.info("Database is empty. Running seeder...")
+            from .seed_data import seed_db
+            try:
+                seed_db()
+            except Exception as e:
+                logger.error(f"Failed to seed db: {e}")
+                
     finally:
         db.close()
         
