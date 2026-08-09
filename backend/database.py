@@ -27,9 +27,11 @@ if DATABASE_URL:
     engine = create_engine(DATABASE_URL)
 else:
     # If no URL was found, we default to local development mode using SQLite.
-    # SQLite stores the entire database in a single file called 'civic_services.db'
-    # right here in the project folder. It's perfect for quick testing.
-    SQLALCHEMY_DATABASE_URL = "sqlite:///./civic_services.db"
+    # Vercel's filesystem is read-only, except for the /tmp directory.
+    if os.getenv("VERCEL"):
+        SQLALCHEMY_DATABASE_URL = "sqlite:////tmp/civic_services.db"
+    else:
+        SQLALCHEMY_DATABASE_URL = "sqlite:///./civic_services.db"
     
     # We create the SQLite engine.
     # 'check_same_thread': False is a specific requirement for SQLite in FastAPI
