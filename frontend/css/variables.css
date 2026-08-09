@@ -5,53 +5,7 @@
   ======================================================================== 
 */
 :root {
-  /* DARK MODE (Default) */
-  --bg-primary: #0b1120;
-  --bg-secondary: #111827;
-  --bg-card: #151e2f;
-  --bg-input: #1e293b;
-
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-
-  --brand-primary: #22b8f0;
-  --brand-hover: #38bdf8;
-
-  --success: #34d399;
-  --warning: #fbbf24;
-  --danger: #f87171;
-
-  --border: rgba(148, 163, 184, 0.18);
-  --shadow: 0 10px 30px rgba(0,0,0,0.18);
-  
-  /* Priority Badges in Dark Mode */
-  --priority-critical-bg: rgba(248, 113, 113, 0.2);
-  --priority-critical-text: #fca5a5;
-  
-  --priority-high-bg: rgba(251, 191, 36, 0.2);
-  --priority-high-text: #fde047;
-  
-  --priority-medium-bg: rgba(251, 191, 36, 0.1);
-  --priority-medium-text: #fef08a;
-  
-  --priority-low-bg: rgba(52, 211, 153, 0.2);
-  --priority-low-text: #6ee7b7;
-
-  /* Status Colors */
-  --status-open: #60a5fa;
-  --status-assigned: #a78bfa;
-  --status-inprogress: #fbbf24;
-  --status-resolved: #34d399;
-
-  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  --border-radius: 8px;
-  --border-radius-lg: 12px;
-  --transition-speed: 0.2s;
-}
-
-[data-theme="light"] {
-  /* LIGHT MODE */
+  /* LIGHT MODE (Default) */
   --bg-primary: #f8fafc;
   --bg-secondary: #f1f5f9;
   --bg-card: #ffffff;
@@ -89,4 +43,50 @@
   --status-assigned: #7c3aed;
   --status-inprogress: #d97706;
   --status-resolved: #059669;
+
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --border-radius: 8px;
+  --border-radius-lg: 12px;
+  --transition-speed: 0.2s;
+}
+
+[data-theme="dark"] {
+  /* DARK MODE */
+  --bg-primary: #0b1120;
+  --bg-secondary: #111827;
+  --bg-card: #151e2f;
+  --bg-input: #1e293b;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  --brand-primary: #22b8f0;
+  --brand-hover: #38bdf8;
+
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #f87171;
+
+  --border: rgba(148, 163, 184, 0.18);
+  --shadow: 0 10px 30px rgba(0,0,0,0.18);
+  
+  /* Priority Badges in Dark Mode */
+  --priority-critical-bg: rgba(248, 113, 113, 0.2);
+  --priority-critical-text: #fca5a5;
+  
+  --priority-high-bg: rgba(251, 191, 36, 0.2);
+  --priority-high-text: #fde047;
+  
+  --priority-medium-bg: rgba(251, 191, 36, 0.1);
+  --priority-medium-text: #fef08a;
+  
+  --priority-low-bg: rgba(52, 211, 153, 0.2);
+  --priority-low-text: #6ee7b7;
+
+  /* Status Colors */
+  --status-open: #60a5fa;
+  --status-assigned: #a78bfa;
+  --status-inprogress: #fbbf24;
+  --status-resolved: #34d399;
 }
