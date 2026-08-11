@@ -7,7 +7,7 @@ import logging
 from contextlib import asynccontextmanager
 
 from .database import engine, Base, SessionLocal
-from .models import Admin
+from .models import User
 from .services.auth_service import AuthService
 from .routers import complaints, admin, analytics, auth, chat
 
@@ -33,21 +33,11 @@ async def lifespan(app: FastAPI):
     # (Based on the models defined in models.py)
     Base.metadata.create_all(bind=engine)
     
-    # 2. Seed the default admin account so we can actually log in
+    # 2. Check if DB is seeded
     db = SessionLocal()
     try:
-        # Check if an admin already exists
-        if not db.query(Admin).first():
-            logger.info("No admin found. Creating default admin account...")
-            default_password = os.getenv("ADMIN_PASSWORD", "admin123")
-            hashed_pw = AuthService.get_password_hash(default_password)
-            new_admin = Admin(username="admin", hashed_password=hashed_pw)
-            db.add(new_admin)
-            db.commit()
-            logger.info("Default admin created successfully (username: 'admin').")
-            
-        from .models import Complaint
-        if not db.query(Complaint).first():
+        # Check if any users exist
+        if not db.query(User).first():
             logger.info("Database is empty. Running seeder...")
             from .seed_data import seed_db
             try:

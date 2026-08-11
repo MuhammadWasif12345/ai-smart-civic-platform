@@ -3,7 +3,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('complaintForm');
   const submitBtn = document.getElementById('submitBtn');
-  const loadingOverlay = document.getElementById('loadingOverlay');
+  const loadingOverlayTitle = document.getElementById('loadingOverlayTitle');
+  const loadingOverlayDesc = document.getElementById('loadingOverlayDesc');
+  const loadingProgressBar = document.getElementById('loadingProgressBar');
   const formCard = document.getElementById('formCard');
   const aiExplanation = document.getElementById('aiExplanation');
   const successCard = document.getElementById('successCard');
@@ -141,15 +143,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // UI Loading state
     submitBtn.disabled = true;
-    submitBtn.innerHTML = 'Analyzing...';
+    submitBtn.innerHTML = 'Processing...';
     loadingOverlay.style.display = 'flex';
+    
+    // Reset progress
+    loadingProgressBar.style.width = '10%';
+    loadingOverlayTitle.textContent = 'Analyzing description...';
+    loadingOverlayDesc.textContent = 'Our AI is reading your submission.';
 
     try {
-      const response = await fetch('/api/complaints', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+      // Simulate stepped progress
+      const steps = [
+        { wait: 600, p: '30%', t: 'Classifying category...', d: 'Determining the correct department.' },
+        { wait: 600, p: '60%', t: 'Assessing priority...', d: 'Checking for critical keywords and hazards.' },
+        { wait: 600, p: '85%', t: 'Routing complaint...', d: 'Assigning to the appropriate municipal team.' }
+      ];
+      
+      const simulateSteps = async () => {
+        for (const s of steps) {
+            await new Promise(r => setTimeout(r, s.wait));
+            loadingProgressBar.style.width = s.p;
+            loadingOverlayTitle.textContent = s.t;
+            loadingOverlayDesc.textContent = s.d;
+        }
+      };
+      
+      // Run the fetch and the simulation concurrently
+      const [response] = await Promise.all([
+        fetch('/api/complaints', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }),
+        simulateSteps()
+      ]);
+      
+      loadingProgressBar.style.width = '100%';
+      loadingOverlayTitle.textContent = 'Done!';
+      loadingOverlayDesc.textContent = 'Redirecting...';
+      await new Promise(r => setTimeout(r, 400)); // Brief pause at 100%
 
       if (!response.ok) {
         throw new Error('Server returned an error');
@@ -217,3 +249,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+// Global function for Quick Samples
+window.fillSample = function(desc, loc) {
+    document.getElementById('description').value = desc;
+    document.getElementById('location').value = loc;
+};

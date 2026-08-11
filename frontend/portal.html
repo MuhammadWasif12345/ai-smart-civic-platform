@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal - AI Smart Civic Services</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  
+  <link rel="stylesheet" href="css/variables.css?v=4">
+  <link rel="stylesheet" href="css/base.css?v=8">
+  <link rel="stylesheet" href="css/components.css?v=4">
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    /* Admin Layout Styles */
+    body {
+      background-color: var(--bg-secondary);
+      margin: 0;
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      width: 260px;
+      background-color: var(--bg-card);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      transition: transform var(--transition-speed) ease;
+      z-index: 100;
+    }
+
+    .sidebar-header {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      padding: 0 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 1.5rem 1rem;
+      overflow-y: auto;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-radius: var(--border-radius);
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .sidebar-link:hover, .sidebar-link.active {
+      background-color: rgba(34, 184, 240, 0.1);
+      color: var(--brand-primary);
+      text-decoration: none;
+    }
+
+    .sidebar-footer {
+      padding: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--brand-primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .topbar {
+      height: 70px;
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+    }
+
+    .content-area {
+      flex: 1;
+      padding: 2rem;
+      overflow-y: auto;
+    }
+
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        left: -260px;
+        top: 0;
+        bottom: 0;
+        box-shadow: var(--shadow);
+      }
+      .sidebar.open {
+        left: 0;
+      }
+      .mobile-toggle {
+        display: block;
+      }
+      .topbar {
+        padding: 0 1rem;
+      }
+      .topbar h2 {
+        font-size: 1.25rem;
+      }
+      .content-area {
+        padding: 1rem;
+      }
+      .sidebar-footer {
+        padding: 1rem;
+      }
+      .user-profile {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 0.5rem;
+      }
+      .kpi-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1rem;
+      }
+    }
+    
+    /* Layout utilities for dynamic views */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .kpi-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius-lg);
+      padding: 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      box-shadow: var(--shadow);
+    }
+    
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .chart-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+  </style>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  </script>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="logo" style="font-size: 1.1rem;">
+        <i data-lucide="shield-check" style="color: var(--brand-primary);"></i> AI Smart Civic
+      </a>
+    </div>
+    
+    <nav class="sidebar-nav" id="sidebarNav">
+      <!-- Dynamically populated by portal.js based on role -->
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-profile">
+        <div class="avatar" id="userAvatar">U</div>
+        <div style="flex: 1;">
+          <div style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary);" id="userNameDisplay">User</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);" id="userRoleDisplay">Role</div>
+        </div>
+        <button id="logoutBtn" style="background:none; border:none; color:var(--text-secondary); cursor:pointer;" title="Logout">
+          <i data-lucide="log-out"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <header class="topbar">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <button class="mobile-toggle" id="mobileToggle">
+          <i data-lucide="menu"></i>
+        </button>
+        <h2 style="margin: 0; font-size: 1.25rem;" id="pageTitle">Dashboard</h2>
+      </div>
+      
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        
+        <button class="btn btn-primary" id="refreshBtn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">
+          <i data-lucide="refresh-cw" id="refreshIcon" style="width: 14px; height: 14px;"></i> Refresh
+        </button>
+      </div>
+    </header>
+
+    <div class="content-area" id="appContent">
+      <!-- Dynamic Views Rendered Here -->
+    </div>
+  </main>
+
+  <!-- Template for Complaint Details Modal -->
+  <div class="modal-backdrop" id="complaintModal" style="display: none;">
+    <div class="modal" style="max-width: 800px; width: 90%;">
+      <div class="modal-header">
+        <h3 id="modalTitle">Complaint Details</h3>
+        <button class="close-btn" onclick="closeModal()">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Details injected dynamically -->
+      </div>
+      <div class="modal-footer" id="modalFooter" style="display: flex; gap: 1rem; justify-content: flex-end;">
+        <!-- Action buttons injected based on role -->
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js?v=4"></script>
+  <script src="js/portal.js?v=16"></script>
+  <script src="js/theme.js?v=7"></script>
+  <script>
+    // Logout Logic
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      ApiClient.clearToken();
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('userDept');
+      window.location.href = 'admin-login.html';
+    });
+    
+    // Mobile Sidebar
+    document.getElementById('mobileToggle').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('open');
+    });
+    
+    // Customize Chart.js defaults
+    Chart.defaults.color = getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim() || '#94a3b8';
+    Chart.defaults.font.family = getComputedStyle(document.documentElement).getPropertyValue('--font-family').trim() || 'Inter, sans-serif';
+  </script>
+</body>
+</html>

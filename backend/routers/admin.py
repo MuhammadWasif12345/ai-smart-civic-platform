@@ -1,85 +1,116 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
-from typing import Optional
+from typing import Optional, List
 
 from ..database import get_db
-from ..schemas import PaginatedComplaints, ComplaintResponse, StatusUpdate, AssignDepartment
+from ..schemas import PaginatedComplaints, ComplaintResponse, StatusUpdate, AssignComplaint, UserResponse, AuditLogResponse
 from ..services.complaint_manager import ComplaintManager
 from ..services.notification_service import NotificationManager
-from .auth import get_current_admin
-from ..models import Admin
+from .auth import get_current_user, require_role
+from ..models import User, AuditLog
 
 # --------------------------------------------------------------------------------
 # ADMIN ROUTER
-# These endpoints power the internal city dashboard. They allow staff to view all
-# complaints, filter them, and update their statuses.
-# Every endpoint here requires the user to be logged in (via `get_current_admin`).
+# Role-based API endpoints for staff.
 # --------------------------------------------------------------------------------
 
-# We add the `get_current_admin` dependency to the entire router, so we don't have
-# to write it on every single function below.
-router = APIRouter(dependencies=[Depends(get_current_admin)])
+router = APIRouter(dependencies=[Depends(get_current_user)])
 
-@router.get("/complaints", response_model=PaginatedComplaints)
+@router.get("/me", response_model=UserResponse)
+def get_my_profile(user: User = Depends(get_current_user)):
+    return user
+
+@router.get("/users", response_model=List[UserResponse], dependencies=[Depends(require_role(["SUPER_ADMIN", "MUNICIPAL_ADMIN", "SUPERVISOR"]))])
+def get_users(role: Optional[str] = Query(None, description="Filter by role"), db: Session = Depends(get_db)):
+    query = db.query(User)
+    if role:
+        query = query.filter(User.role == role)
+    return query.all()
+
+@router.get("/complaints", response_model=PaginatedComplaints, dependencies=[Depends(require_role(["SUPER_ADMIN", "MUNICIPAL_ADMIN", "SUPERVISOR", "FIELD_OFFICER"]))])
 def list_all_complaints(
     category: Optional[str] = Query(None, description="Filter by category"),
     priority: Optional[str] = Query(None, description="Filter by AI priority"),
     status: Optional[str] = Query(None, description="Filter by current status"),
-    department: Optional[str] = Query(None, description="Filter by assigned department"),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
 ):
-    """
-    Fetch a list of complaints for the dashboard table.
-    The admin can pass optional query parameters (like ?status=Open&priority=Critical)
-    to filter the results.
-    """
+    department = None
+    assigned_to = None
+    
+    # Enforce RBAC filtering
+    if user.role == "FIELD_OFFICER":
+        assigned_to = user.username # Only see their own work
+    elif user.role == "SUPERVISOR" and user.department:
+        department = user.department # Only see their department's work
+        
     complaints = ComplaintManager.list_complaints(
-        db, category=category, priority=priority, status=status, department=department
+        db, category=category, priority=priority, status=status, 
+        department=department, assigned_to=assigned_to
     )
     
-    # We wrap it in our Paginated schema so the frontend knows the total count
     return {"total": len(complaints), "complaints": complaints}
 
 
-@router.patch("/complaints/{complaint_id}/status", response_model=ComplaintResponse)
+@router.patch("/complaints/{complaint_id}/status", response_model=ComplaintResponse, dependencies=[Depends(require_role(["FIELD_OFFICER", "SUPERVISOR", "MUNICIPAL_ADMIN", "SUPER_ADMIN"]))])
 def update_complaint_status(
     complaint_id: str, 
     update_data: StatusUpdate, 
     db: Session = Depends(get_db),
-    admin: Admin = Depends(get_current_admin)  # We get the specific admin to log who did this
+    user: User = Depends(get_current_user)
 ):
-    """
-    Change a complaint's status (e.g., from "Open" to "In Progress").
-    """
-    # We pass the admin's username so the database audit log knows who made the change
     updated_complaint = ComplaintManager.update_status(
-        db, complaint_id, update_data.new_status, changed_by=admin.username
+        db, complaint_id, update_data.new_status, changed_by_user=user, note=update_data.note
     )
     
     if not updated_complaint:
         raise HTTPException(status_code=404, detail="Complaint not found")
         
-    # Attempt to notify the citizen about the change
-    NotificationManager.notify_status_change(updated_complaint)
+    # NotificationManager.notify_status_change(updated_complaint)
     
     return updated_complaint
 
 
-@router.patch("/complaints/{complaint_id}/assign", response_model=ComplaintResponse)
-def assign_complaint_department(
+@router.patch("/complaints/{complaint_id}/assign", response_model=ComplaintResponse, dependencies=[Depends(require_role(["SUPERVISOR", "MUNICIPAL_ADMIN", "SUPER_ADMIN"]))])
+def assign_complaint(
     complaint_id: str, 
-    assign_data: AssignDepartment, 
+    assign_data: AssignComplaint, 
     db: Session = Depends(get_db),
-    admin: Admin = Depends(get_current_admin)
+    user: User = Depends(get_current_user)
+):
+    updated_complaint = ComplaintManager.assign_complaint(
+        db, complaint_id, assign_data.department, assign_data.assigned_to, assigned_by_user=user
+    )
+    
+    if not updated_complaint:
+        raise HTTPException(status_code=404, detail="Complaint not found")
+        
+    return updated_complaint
+
+
+@router.patch("/complaints/{complaint_id}/field-update", response_model=ComplaintResponse, dependencies=[Depends(require_role(["FIELD_OFFICER"]))])
+def field_update(
+    complaint_id: str, 
+    update_data: StatusUpdate, 
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
 ):
     """
-    Assign a specific city department to handle the complaint.
+    Specific endpoint for field officers to provide updates.
     """
-    updated_complaint = ComplaintManager.assign_department(
-        db, complaint_id, assign_data.department, assigned_by=admin.username
+    updated_complaint = ComplaintManager.update_status(
+        db, complaint_id, update_data.new_status, changed_by_user=user, note=update_data.note
     )
     
     if not updated_complaint:
         raise HTTPException(status_code=404, detail="Complaint not found")
         
     return updated_complaint
+
+
+@router.get("/audit-logs", response_model=List[AuditLogResponse], dependencies=[Depends(require_role(["SUPER_ADMIN"]))])
+def get_audit_logs(db: Session = Depends(get_db)):
+    """
+    Super Admin only: View system audit logs.
+    """
+    return db.query(AuditLog).order_by(AuditLog.timestamp.desc()).all()

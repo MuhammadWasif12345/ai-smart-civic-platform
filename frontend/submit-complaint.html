@@ -6,10 +6,10 @@
   <title>Submit a Complaint - AI Smart Civic Services</title>
   <link rel="icon" type="image/png" href="favicon.png">
   
-  <link rel="stylesheet" href="css/variables.css">
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/chatbot.css">
+  <link rel="stylesheet" href="css/variables.css?v=4">
+  <link rel="stylesheet" href="css/base.css?v=8">
+  <link rel="stylesheet" href="css/components.css?v=4">
+  <link rel="stylesheet" href="css/chatbot.css?v=4">
   
   <style>
     /* Custom styles for the drag and drop area */
@@ -107,16 +107,42 @@
       border-radius: var(--border-radius-lg);
       text-align: left;
       margin-bottom: 2rem;
+      color: var(--text-primary);
     }
     [data-theme="dark"] .success-ai-box {
       background-color: rgba(255, 255, 255, 0.03);
+    }
+    
+    /* Quick Samples */
+    .quick-samples {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+    .quick-sample-btn {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .quick-sample-btn:hover {
+      background-color: rgba(34, 184, 240, 0.1);
+      color: var(--brand-primary);
+      border-color: var(--brand-primary);
     }
   </style>
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light' || (!savedTheme && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
       document.documentElement.setAttribute('data-theme', 'light');
     }
   </script>
@@ -126,25 +152,31 @@
   <!-- Navigation Header -->
   <header>
     <div class="container">
-      
+      <button class="theme-toggle-btn mobile-theme-toggle" aria-label="Toggle Night Mode">
+        <i data-lucide="moon" class="theme-icon"></i>
+      </button>
       <button id="mobile-menu-btn" class="hamburger">
         <i data-lucide="menu"></i>
       </button>
-      <a href="index.html" class="logo" style="display:flex; flex-direction:column; align-items:center; gap:2px; text-decoration:none;">
-        <div style="display:flex; align-items:center; gap:0.5rem; white-space:nowrap; font-size:1.1rem; line-height:1;">
-            <i data-lucide="shield-check" style="width:20px;"></i> AI Smart Civic
+      <a href="index.html" class="logo" style="display:flex; align-items:flex-start; gap:0.5rem; text-decoration:none;">
+        <i data-lucide="shield-check" style="width:20px; margin-top:2px;"></i>
+        <div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1;">
+            <span style="white-space:nowrap; font-size:1.1rem; font-weight:700;">AI Smart Civic</span>
+            <span style="font-size:0.65rem; background:var(--brand-primary); color:white; padding:0.15rem 0.4rem; border-radius:4px; margin-top:2px; font-weight:600; letter-spacing:0.05em;">AI Powered</span>
         </div>
-        <span style="font-size:0.6rem; background:var(--brand-primary); color:white; padding:0.1rem 0.4rem; border-radius:4px; line-height:1;">AI Powered</span>
       </a>
-        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Night Mode">
-          <i data-lucide="moon" id="theme-icon"></i>
-        </button>
+      
+      
       <div class="nav-links">
-
-        <a href="index.html">Citizen Portal</a>
-        <a href="track-complaint.html">Track Ticket</a>
-        <a href="about.html">About / How It Works</a>
-        <a href="admin-login.html" class="btn btn-outline" style="padding: 0.4rem 1rem;">Admin Login</a>
+        <a href="portal.html">Citizen Portal</a>
+        <a href="track-complaint.html">Track Complaint</a>
+        <a href="index.html#how-it-works">How It Works</a>
+        <a href="index.html#ai-copilot">AI Copilot</a>
+        
+        <button class="theme-toggle-btn desktop-theme-toggle" aria-label="Toggle Night Mode">
+          <i data-lucide="moon" class="theme-icon"></i>
+        </button>
+        <a href="portal.html" class="btn btn-outline" style="padding: 0.4rem 1rem;">Sign In / Admin</a>
       </div>
     </div>
   </header>
@@ -152,10 +184,15 @@
   <main class="container" style="padding-top: 4rem; padding-bottom: 4rem; max-width: 900px; display: flex; gap: 2rem; flex-wrap: wrap;">
     
     <!-- LOADING OVERLAY -->
-    <div id="loadingOverlay" class="loading-overlay">
-      <div class="large-spinner"></div>
-      <h3 style="margin-bottom: 0.5rem;">Analyzing complaint...</h3>
-      <p style="color: var(--text-secondary);">Please wait while AI processes your report.</p>
+    <div id="loadingOverlay" class="loading-overlay" style="flex-direction: column;">
+      <div class="large-spinner" style="margin-bottom: 1.5rem;"></div>
+      <h3 id="loadingOverlayTitle" style="margin-bottom: 0.5rem;">Analyzing complaint...</h3>
+      <p id="loadingOverlayDesc" style="color: var(--text-secondary);">Please wait while AI processes your report.</p>
+      
+      <!-- Progress Bar (Fake) -->
+      <div style="width: 250px; height: 6px; background: var(--bg-card); border-radius: 3px; margin-top: 1.5rem; overflow: hidden; border: 1px solid var(--border);">
+        <div id="loadingProgressBar" style="width: 0%; height: 100%; background: var(--brand-primary); transition: width 0.5s ease;"></div>
+      </div>
     </div>
 
     <!-- MAIN FORM SECTION -->
@@ -173,6 +210,12 @@
             placeholder="e.g., There is a large pothole near the intersection of Main St and 4th Ave that is causing cars to swerve dangerously..."
             required
           ></textarea>
+          <div class="quick-samples">
+            <button type="button" class="quick-sample-btn" onclick="fillSample('Pothole on Main St causing damage to vehicles.', 'Main St')">Pothole</button>
+            <button type="button" class="quick-sample-btn" onclick="fillSample('Water pipe burst flooding the sidewalk.', '4th Ave')">Water Leak</button>
+            <button type="button" class="quick-sample-btn" onclick="fillSample('Streetlights are completely out making it unsafe.', 'Oak St')">Broken Streetlight</button>
+            <button type="button" class="quick-sample-btn" onclick="fillSample('Illegal dumping of garbage in the alleyway.', 'Back Alley')">Illegal Dumping</button>
+          </div>
           <div id="descriptionError" class="error-text">Please provide a detailed description.</div>
         </div>
 
@@ -237,7 +280,7 @@
       <div style="color: var(--success); margin-bottom: 1rem;">
         <i data-lucide="check-circle" style="width: 64px; height: 64px;"></i>
       </div>
-      <h2>Complaint Submitted Successfully</h2>
+      <h2 style="color: var(--text-primary);">Complaint Submitted Successfully</h2>
       <p style="color: var(--text-secondary); margin-bottom: 2rem;">Your report has been received and is being processed.</p>
       
       <!-- Complaint ID Box -->
@@ -307,8 +350,8 @@
 
   </main>
 
-  <script src="js/submit-complaint.js"></script>
-  <script src="js/theme.js"></script>
-  <script src="js/chatbot.js"></script>
+  <script src="js/submit-complaint.js?v=4"></script>
+  <script src="js/theme.js?v=7"></script>
+  <script src="js/chatbot.js?v=4"></script>
 </body>
 </html>

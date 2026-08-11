@@ -4,6 +4,8 @@ from ..database import get_db
 from ..schemas import ComplaintCreate, ComplaintResponse
 from ..services.complaint_manager import ComplaintManager
 from ..services.ai_service import AIAnalyzer
+from .auth import get_current_user, require_role
+from ..models import User
 import os
 
 # --------------------------------------------------------------------------------
@@ -35,6 +37,11 @@ def submit_complaint(complaint: ComplaintCreate, db: Session = Depends(get_db)):
         # Step 2: Save the complaint in the database along with the AI's findings
         new_complaint = ComplaintManager.create_complaint(db, complaint, ai_result)
         
+        # We don't automatically set citizen_id here because this endpoint is public.
+        # But if we were securely passing tokens to the submit endpoint, we could.
+        # For this demo, citizens submit publicly and then track by ID. 
+        # But for the dashboard "My Complaints" to work, we'll need an endpoint.
+        
         # Step 3: Return the saved data (including the new complaint_id) back to the citizen
         return new_complaint
     except Exception as e:
@@ -61,3 +68,11 @@ def track_complaint(complaint_id: str, db: Session = Depends(get_db)):
         )
         
     return complaint
+
+@router.get("/my/list", response_model=list[ComplaintResponse], dependencies=[Depends(require_role(["CITIZEN"]))])
+def get_my_complaints(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    """
+    Returns only the complaints belonging to the logged-in citizen.
+    """
+    complaints = ComplaintManager.list_complaints(db, citizen_id=user.id)
+    return complaints

@@ -1,444 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Smart Civic Services - Operations Platform</title>
-  <link rel="icon" type="image/png" href="favicon.png">
-  
-  <link rel="stylesheet" href="css/variables.css?v=4">
-  <link rel="stylesheet" href="css/base.css?v=8">
-  <link rel="stylesheet" href="css/components.css?v=4">
-  <link rel="stylesheet" href="css/chatbot.css?v=4">
-  
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
-  <style>
-    /* Premium Modern SaaS Layout Styles */
-    
-    .badge-premium {
-      background: rgba(34, 184, 240, 0.1);
-      color: var(--brand-primary);
-      border: 1px solid rgba(34, 184, 240, 0.2);
-      padding: 0.4rem 1rem;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-    }
+import os
 
-    /* Hero Section */
-    .hero {
-      position: relative;
-      padding: 6rem 1.5rem 8rem 1.5rem;
-      background: radial-gradient(circle at 70% 30%, rgba(34, 184, 240, 0.05) 0%, transparent 60%);
-      overflow: hidden;
-    }
-    
-    .hero-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: center;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+file_path = r'd:\SMIT PROJECT\frontend\index.html'
+with open(file_path, 'r', encoding='utf-8') as f:
+    content = f.read()
 
-    .hero-content {
-      z-index: 2;
-    }
-
-    .hero h1 {
-      font-size: 3.5rem;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      margin-bottom: 1.5rem;
-    }
-
-    .hero p.supporting-text {
-      font-size: 1.15rem;
-      color: var(--text-secondary);
-      margin-bottom: 2.5rem;
-      max-width: 90%;
-    }
-
-    .hero-ctas {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .hero-visual {
-      position: relative;
-      z-index: 1;
-      animation: float 6s ease-in-out infinite;
-    }
-
-    .hero-visual img {
-      width: 100%;
-      max-width: 600px;
-      border-radius: var(--border-radius-lg);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-      border: 1px solid var(--border);
-    }
-
-    @keyframes float {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-15px); }
-      100% { transform: translateY(0px); }
-    }
-
-    /* Feature Pills */
-    .feature-pills {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-top: 3rem;
-    }
-    .feature-pill {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Section Global */
-    .section {
-      padding: 6rem 1.5rem;
-      border-top: 1px solid var(--border);
-    }
-    .section-dark {
-      background-color: var(--bg-card);
-    }
-    
-    .section-header {
-      text-align: center;
-      margin-bottom: 4rem;
-    }
-    .section-header h2 {
-      font-size: 2.5rem;
-      letter-spacing: -0.01em;
-    }
-    .section-header p {
-      color: var(--text-secondary);
-      font-size: 1.1rem;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    /* Live Metrics */
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.5rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .metric-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      padding: 2rem;
-      border-radius: var(--border-radius-lg);
-      box-shadow: var(--shadow);
-      text-align: left;
-      position: relative;
-      overflow: hidden;
-    }
-    .metric-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; height: 4px;
-      background: var(--brand-primary);
-    }
-    .metric-card.critical::before { background: var(--danger); }
-    .metric-card.resolved::before { background: var(--success); }
-    
-    .metric-value {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin: 0.5rem 0;
-      color: var(--text-primary);
-    }
-    .metric-label {
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    /* AI Pipeline */
-    .pipeline-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-      max-width: 1200px;
-      margin: 0 auto;
-      position: relative;
-    }
-    .pipeline-step {
-      background: var(--bg-primary);
-      border: 1px solid var(--border);
-      padding: 1.5rem;
-      border-radius: var(--border-radius);
-      width: 160px;
-      text-align: center;
-      z-index: 2;
-      position: relative;
-    }
-    .pipeline-step h4 {
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 0.5rem;
-    }
-    .pipeline-step p {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin: 0;
-    }
-    .pipeline-connector {
-      display: flex;
-      align-items: center;
-      color: var(--brand-primary);
-      animation: pulseRight 2s infinite;
-    }
-    @keyframes pulseRight {
-      0% { transform: translateX(0); opacity: 0.5; }
-      50% { transform: translateX(5px); opacity: 1; }
-      100% { transform: translateX(0); opacity: 0.5; }
-    }
-
-    /* AI Copilot Panel */
-    .copilot-panel {
-      max-width: 900px;
-      margin: 0 auto;
-      background: var(--bg-primary);
-      border: 1px solid var(--border);
-      border-radius: var(--border-radius-lg);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-      overflow: hidden;
-      display: grid;
-      grid-template-columns: 300px 1fr;
-    }
-    .copilot-sidebar {
-      background: var(--bg-card);
-      padding: 2rem;
-      border-right: 1px solid var(--border);
-    }
-    .copilot-chat {
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-    .msg-user {
-      align-self: flex-end;
-      background: var(--brand-primary);
-      color: white;
-      padding: 1rem 1.5rem;
-      border-radius: 12px;
-      border-bottom-right-radius: 2px;
-      max-width: 80%;
-    }
-    .msg-ai {
-      align-self: flex-start;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      padding: 1rem 1.5rem;
-      border-radius: 12px;
-      border-bottom-left-radius: 2px;
-      max-width: 80%;
-    }
-
-    /* Quick Reports Grid */
-    .quick-reports {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .report-card {
-      background: var(--bg-primary);
-      border: 1px solid var(--border);
-      border-radius: var(--border-radius);
-      padding: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-decoration: none;
-      color: var(--text-primary);
-    }
-    .report-card:hover {
-      border-color: var(--brand-primary);
-      background: rgba(34, 184, 240, 0.05);
-      transform: translateY(-2px);
-    }
-    .report-icon {
-      width: 48px;
-      height: 48px;
-      background: var(--bg-card);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--brand-primary);
-    }
-
-    /* Analytics Preview */
-    .chart-container {
-      max-width: 800px;
-      margin: 0 auto;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--border-radius-lg);
-      padding: 2rem;
-    }
-
-    /* Trust Section */
-    .trust-footer {
-      background: var(--bg-primary);
-      border-top: 1px solid var(--border);
-      padding: 4rem 1.5rem;
-      text-align: center;
-    }
-    .security-badges {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-      margin-bottom: 2rem;
-      color: var(--text-muted);
-    }
-    .sec-badge {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-
-    @media (max-width: 900px) {
-      .hero-container { grid-template-columns: 1fr; text-align: center; }
-      .hero-ctas, .feature-pills { justify-content: center; }
-      .copilot-panel { grid-template-columns: 1fr; }
-      .copilot-sidebar { border-right: none; border-bottom: 1px solid var(--border); }
-      .pipeline-connector i { transform: rotate(90deg); }
-      .pipeline-container { flex-direction: column; align-items: center; }
-      .pipeline-connector { animation: pulseDown 2s infinite; }
-      @keyframes pulseDown {
-        0% { transform: translateY(0); opacity: 0.5; }
-        50% { transform: translateY(5px); opacity: 1; }
-        100% { transform: translateY(0); opacity: 0.5; }
-      }
-    }
-  </style>
-  <script>
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-    } else {
-      document.documentElement.setAttribute('data-theme', 'light');
-    }
-  </script>
-</head>
-<body>
-
-  <!-- HEADER -->
-  <header>
-    <div class="container">
-      <button class="theme-toggle-btn mobile-theme-toggle" aria-label="Toggle Night Mode">
-        <i data-lucide="moon" class="theme-icon"></i>
-      </button>
-      <button id="mobile-menu-btn" class="hamburger">
-        <i data-lucide="menu"></i>
-      </button>
-      <a href="index.html" class="logo" style="display:flex; align-items:flex-start; gap:0.5rem; text-decoration:none;">
-        <i data-lucide="shield-check" style="width:20px; margin-top:2px;"></i>
-        <div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1;">
-            <span style="white-space:nowrap; font-size:1.1rem; font-weight:700;">AI Smart Civic</span>
-            <span style="font-size:0.65rem; background:var(--brand-primary); color:white; padding:0.15rem 0.4rem; border-radius:4px; margin-top:2px; font-weight:600; letter-spacing:0.05em;">AI Powered</span>
-        </div>
-      </a>
-      
-      
-      <div class="nav-links">
-        <a href="portal.html">Citizen Portal</a>
-        <a href="track-complaint.html">Track Complaint</a>
-        <a href="index.html#how-it-works">How It Works</a>
-        <a href="index.html#ai-copilot">AI Copilot</a>
-        
-        <button class="theme-toggle-btn desktop-theme-toggle" aria-label="Toggle Night Mode">
-          <i data-lucide="moon" class="theme-icon"></i>
-        </button>
-        <a href="portal.html" class="btn btn-outline" style="padding: 0.4rem 1rem;">Sign In / Admin</a>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <!-- 1. HERO SECTION -->
-    <section class="hero">
-      <div class="hero-container">
-        
-        <div class="hero-content">
-          <div class="badge-premium">
-            <i data-lucide="sparkles" style="width:14px;"></i> AI-POWERED CIVIC INTELLIGENCE
-          </div>
-          <h1>Report a Problem.<br>Track the Resolution.<br>Improve Your Community.</h1>
-          <p class="supporting-text">
-            Report civic issues in seconds. Our AI engine automatically understands your complaint, determines urgency, categorizes the issue, and routes it directly to the appropriate municipal team.
-          </p>
-          <div class="hero-ctas">
-            <a href="submit-complaint.html" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1.1rem;">
-              REPORT A PROBLEM
-            </a>
-            <a href="track-complaint.html" class="btn btn-outline" style="padding: 1rem 2rem; font-size: 1.1rem;">
-              TRACK MY COMPLAINT
-            </a>
-            <a href="#ai-copilot" class="btn btn-outline" style="padding: 1rem 2rem; font-size: 1.1rem; border-color: transparent;">
-              ASK CIVIC AI <i data-lucide="arrow-down" style="width:16px;"></i>
-            </a>
-          </div>
-          
-          <div class="feature-pills">
-            <div class="feature-pill"><i data-lucide="cpu" style="color:var(--brand-primary); width:16px;"></i> AI Classification</div>
-            <div class="feature-pill"><i data-lucide="zap" style="color:var(--warning); width:16px;"></i> Smart Priority</div>
-            <div class="feature-pill"><i data-lucide="git-merge" style="color:var(--success); width:16px;"></i> Real-Time Routing</div>
-            <div class="feature-pill"><i data-lucide="shield" style="color:var(--danger); width:16px;"></i> Role-Based Access</div>
-          </div>
-        </div>
-
-        <div class="hero-visual">
-          <img src="ai_civic_visual.png" alt="Futuristic AI Municipal Operations Dashboard" onerror="this.src='hero.png'">
-        </div>
-
-      </div>
-    </section>
-
-
+# 1. Insert Feature Grid, Metrics Banner, Testimonials, FAQ, CTA before '<!-- 2. LIVE CIVIC OPERATIONS -->'
+insert_index = content.find('    <!-- 2. LIVE CIVIC OPERATIONS -->')
+if insert_index != -1:
+    html_to_inject = '''
     <!-- NEW: FEATURE GRID -->
     <section class="section" style="background-color: var(--bg-primary);">
       <div class="container" style="max-width: 1200px; margin: 0 auto;">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem;">
           
           <div style="background: var(--bg-card); border: 1px solid var(--border); padding: 2rem; border-radius: 16px;">
             <div style="width: 40px; height: 40px; background: rgba(34, 184, 240, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
@@ -690,201 +263,22 @@
         </div>
       </div>
     </section>
+'''
+    content = content[:insert_index] + html_to_inject + '\n' + content[insert_index:]
+    print("Inserted grid, metrics, testimonials, FAQ.")
 
-    <!-- 2. LIVE CIVIC OPERATIONS -->
-    <section class="section section-dark">
-      <div class="container">
-        <div class="section-header">
-          <h2>Live Civic Operations</h2>
-          <p>Real-time system metrics directly from the municipal database.</p>
-        </div>
-        
-        <div class="metrics-grid">
-          <div class="metric-card">
-            <div class="metric-label">Total Complaints</div>
-            <div class="metric-value" id="val-total">--</div>
-            <div style="font-size:0.85rem; color:var(--text-secondary);"><i data-lucide="trending-up" style="width:14px;"></i> System Lifetime</div>
-          </div>
-          <div class="metric-card critical">
-            <div class="metric-label">Critical Issues</div>
-            <div class="metric-value" id="val-critical" style="color: var(--danger);">--</div>
-            <div style="font-size:0.85rem; color:var(--text-secondary);"><i data-lucide="alert-triangle" style="width:14px; color:var(--danger);"></i> Action Required</div>
-          </div>
-          <div class="metric-card resolved">
-            <div class="metric-label">Resolved (This Week)</div>
-            <div class="metric-value" id="val-resolved" style="color: var(--success);">--</div>
-            <div style="font-size:0.85rem; color:var(--text-secondary);"><i data-lucide="check-circle" style="width:14px; color:var(--success);"></i> Verified Fixes</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label">Avg Resolution Time</div>
-            <div class="metric-value" id="val-avg">--</div>
-            <div style="font-size:0.85rem; color:var(--text-secondary);"><i data-lucide="clock" style="width:14px;"></i> Across All Depts</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. AI COMPLAINT PIPELINE -->
-    <section class="section" id="how-it-works">
-      <div class="container">
-        <div class="section-header">
-          <h2>AI Complaint Pipeline</h2>
-          <p>How the AI Smart Civic platform processes issues from report to resolution.</p>
-        </div>
-        
-        <div class="pipeline-container">
-          <div class="pipeline-step"><h4>01</h4><p>Citizen Report</p></div>
-          <div class="pipeline-connector"><i data-lucide="arrow-right"></i></div>
-          
-          <div class="pipeline-step" style="border-color: var(--brand-primary);"><h4 style="color:var(--brand-primary);">02</h4><p>AI Analysis</p></div>
-          <div class="pipeline-connector"><i data-lucide="arrow-right"></i></div>
-          
-          <div class="pipeline-step"><h4 style="color:var(--warning);">03</h4><p>Priority Detection</p></div>
-          <div class="pipeline-connector"><i data-lucide="arrow-right"></i></div>
-          
-          <div class="pipeline-step"><h4>04</h4><p>Dept. Routing</p></div>
-          <div class="pipeline-connector"><i data-lucide="arrow-right"></i></div>
-          
-          <div class="pipeline-step"><h4>05</h4><p>Field Officer</p></div>
-          <div class="pipeline-connector"><i data-lucide="arrow-right"></i></div>
-          
-          <div class="pipeline-step"><h4 style="color:var(--success);">06</h4><p>Resolution</p></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4. AI COPILOT -->
-    <section class="section section-dark" id="ai-copilot">
-      <div class="container">
-        <div class="section-header">
-          <h2>Meet the AI Civic Copilot</h2>
-          <p>Don't want to fill out forms? Just chat with our AI to report issues naturally.</p>
-        </div>
-        
-        <div class="copilot-panel" style="display: flex; flex-direction: column; height: 600px; max-width: 900px; margin: 0 auto;">
-          <div style="padding: 1.5rem; border-bottom: 1px solid var(--border); background-color: var(--bg-primary); display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="margin: 0; display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="sparkles" style="color: var(--brand-primary);"></i> Ask the Civic AI</h3>
-            <span style="font-size: 0.8rem; background: var(--brand-primary); color: white; padding: 0.2rem 0.5rem; border-radius: 4px;">Gemini Powered</span>
-          </div>
-          
-          <div id="heroChatMessages" style="flex: 1; padding: 2rem; overflow-y: auto; background-color: var(--bg-card); display: flex; flex-direction: column; gap: 1.5rem;">
-            <div style="align-self: flex-start; max-width: 80%; background-color: var(--bg-primary); border: 1px solid var(--border); padding: 1rem 1.25rem; border-radius: 12px; border-bottom-left-radius: 4px; font-size: 1rem; line-height: 1.5; color: var(--text-primary);">
-              Hello! I'm the AI Smart Civic Assistant. You can ask me how to report a problem, what the priority levels mean, or how to track a ticket. I can even help draft a complaint for you right here!
-            </div>
-          </div>
-          
-          <div style="padding: 1.5rem; border-top: 1px solid var(--border); background-color: var(--bg-primary);">
-            <div style="display: flex; gap: 0.5rem; background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 24px; padding: 0.5rem 0.5rem 0.5rem 1rem; align-items: center;">
-              <input type="text" id="heroChatInput" placeholder="Message Civic AI..." style="flex: 1; border: none; background: transparent; color: var(--text-primary); font-size: 1rem; outline: none; padding: 0.5rem;" autocomplete="off">
-              <button id="heroChatSendBtn" style="background-color: var(--brand-primary); color: white; border: none; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: opacity 0.2s; flex-shrink: 0; min-width: 42px;">
-                <i data-lucide="send" style="width: 18px; height: 18px;"></i>
-              </button>
-            </div>
-            <div style="text-align: center; margin-top: 0.75rem; font-size: 0.75rem; color: var(--text-muted);">
-              AI can make mistakes. Please verify important information before submitting complaints.
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 5. QUICK CIVIC REPORTS -->
-    <section class="section">
-      <div class="container">
-        <div class="section-header">
-          <h2>Quick Civic Reports</h2>
-          <p>Select a common issue to fast-track your report.</p>
-        </div>
-        
-        <div class="quick-reports">
-          <a href="submit-complaint.html?issue=Water+Pipe+Burst" class="report-card">
-            <div class="report-icon"><i data-lucide="droplets"></i></div>
-            <div>
-              <h3 style="font-size: 1.1rem; margin: 0;">Water Pipe Burst</h3>
-              <span style="font-size: 0.85rem; color: var(--text-muted);">Water Department</span>
-            </div>
-          </a>
-          <a href="submit-complaint.html?issue=Deep+Road+Pothole" class="report-card">
-            <div class="report-icon"><i data-lucide="map"></i></div>
-            <div>
-              <h3 style="font-size: 1.1rem; margin: 0;">Deep Road Pothole</h3>
-              <span style="font-size: 0.85rem; color: var(--text-muted);">Roads Infrastructure</span>
-            </div>
-          </a>
-          <a href="submit-complaint.html?issue=Overflowing+Garbage" class="report-card">
-            <div class="report-icon"><i data-lucide="trash-2"></i></div>
-            <div>
-              <h3 style="font-size: 1.1rem; margin: 0;">Overflowing Garbage</h3>
-              <span style="font-size: 0.85rem; color: var(--text-muted);">Waste Management</span>
-            </div>
-          </a>
-          <a href="submit-complaint.html?issue=Broken+Street+Light" class="report-card">
-            <div class="report-icon"><i data-lucide="lightbulb-off"></i></div>
-            <div>
-              <h3 style="font-size: 1.1rem; margin: 0;">Broken Street Light</h3>
-              <span style="font-size: 0.85rem; color: var(--text-muted);">Electrical Services</span>
-            </div>
-          </a>
-          <a href="submit-complaint.html?issue=Sparking+Transformer" class="report-card">
-            <div class="report-icon"><i data-lucide="zap" style="color: var(--danger);"></i></div>
-            <div>
-              <h3 style="font-size: 1.1rem; margin: 0;">Sparking Transformer</h3>
-              <span style="font-size: 0.85rem; color: var(--danger);">Critical Hazard</span>
-            </div>
-          </a>
-          <a href="submit-complaint.html?issue=Blocked+Drain" class="report-card">
-            <div class="report-icon"><i data-lucide="align-justify"></i></div>
-            <div>
-              <h3 style="font-size: 1.1rem; margin: 0;">Blocked Drain</h3>
-              <span style="font-size: 0.85rem; color: var(--text-muted);">Sanitation</span>
-            </div>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- 6. ANALYTICS & TRACKING PREVIEW -->
-    <section class="section section-dark">
-      <div class="container">
-        <div class="section-header">
-          <h2>Civic Analytics Preview</h2>
-          <p>We believe in absolute transparency. View system performance in real-time.</p>
-        </div>
-        
-        <div class="chart-container">
-          <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
-            <h3 style="font-size: 1.1rem;"><i data-lucide="bar-chart-2"></i> Monthly Resolution Trend</h3>
-            <a href="portal.html" style="font-size: 0.85rem; color: var(--brand-primary); cursor: pointer; text-decoration: none;">View Full Analytics &rarr;</a>
-          </div>
-          <div style="position: relative; height: 250px; width: 100%;">
-            <canvas id="previewChart"></canvas>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 7. TRUST & SECURITY -->
-    <section class="trust-footer">
-      <div class="container">
-        <h3 style="font-size: 1.5rem; margin-bottom: 2rem;">Secure Municipal Architecture</h3>
-        <div class="security-badges">
-          <div class="sec-badge"><i data-lucide="shield-check" style="color: var(--success);"></i> Role-Based Access Control (RBAC)</div>
-          <div class="sec-badge"><i data-lucide="lock" style="color: var(--success);"></i> Secure JWT Authentication</div>
-          <div class="sec-badge"><i data-lucide="database" style="color: var(--success);"></i> Immutable Audit Logging</div>
-          <div class="sec-badge"><i data-lucide="server" style="color: var(--success);"></i> FastAPI & SQLAlchemy ORM</div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- 8. PROFESSIONAL FOOTER (REPLACED) -->
-    <footer style="background: var(--bg-card); border-top: 1px solid var(--border); padding: 3rem 1.5rem 2rem 1.5rem;">
+# 2. Replace Footer
+footer_start = content.find('<!-- 8. PROFESSIONAL FOOTER -->')
+footer_end_tag = '</footer>'
+footer_end = content.find(footer_end_tag, footer_start)
+if footer_start != -1 and footer_end != -1:
+    new_footer = '''<!-- 8. PROFESSIONAL FOOTER (REPLACED) -->
+    <footer style="background: var(--bg-card); border-top: 1px solid var(--border); padding: 5rem 1.5rem 2rem 1.5rem;">
       <div class="container" style="max-width: 1200px; margin: 0 auto;">
         
-        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem; margin-bottom: 3rem;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 3rem; margin-bottom: 4rem;">
           
-          <div style="flex: 2; min-width: 250px;">
+          <div style="grid-column: span 2;">
             <a href="index.html" class="logo" style="display:flex; align-items:flex-start; gap:0.5rem; text-decoration:none; margin-bottom: 1.5rem;">
               <i data-lucide="shield-check" style="width:20px; margin-top:2px;"></i>
               <div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1;">
@@ -902,7 +296,7 @@
             </div>
           </div>
 
-          <div style="flex: 1; min-width: 120px;">
+          <div>
             <h4 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary);">Product</h4>
             <div style="display: flex; flex-direction: column; gap: 1rem;">
               <a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.95rem; transition: color 0.2s;" onmouseover="this.style.color='var(--brand-primary)'" onmouseout="this.style.color='var(--text-secondary)'">Features</a>
@@ -912,7 +306,7 @@
             </div>
           </div>
 
-          <div style="flex: 1; min-width: 120px;">
+          <div>
             <h4 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary);">Company</h4>
             <div style="display: flex; flex-direction: column; gap: 1rem;">
               <a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.95rem; transition: color 0.2s;" onmouseover="this.style.color='var(--brand-primary)'" onmouseout="this.style.color='var(--text-secondary)'">About</a>
@@ -923,7 +317,7 @@
             </div>
           </div>
 
-          <div style="flex: 1; min-width: 120px;">
+          <div>
             <h4 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary);">Resources</h4>
             <div style="display: flex; flex-direction: column; gap: 1rem;">
               <a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.95rem; transition: color 0.2s;" onmouseover="this.style.color='var(--brand-primary)'" onmouseout="this.style.color='var(--text-secondary)'">Documentation</a>
@@ -934,7 +328,7 @@
             </div>
           </div>
 
-          <div style="flex: 1; min-width: 120px;">
+          <div>
             <h4 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1.5rem; color: var(--text-primary);">Legal</h4>
             <div style="display: flex; flex-direction: column; gap: 1rem;">
               <a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 0.95rem; transition: color 0.2s;" onmouseover="this.style.color='var(--brand-primary)'" onmouseout="this.style.color='var(--text-secondary)'">Privacy Policy</a>
@@ -955,148 +349,12 @@
           </div>
         </div>
       </div>
-    </footer>
+    </footer>'''
+    content = content[:footer_start] + new_footer + content[footer_end + len(footer_end_tag):]
+    print("Inserted mega footer.")
 
-  <script src="js/theme.js?v=7"></script>
-  <script src="js/chatbot.js?v=4"></script>
-  
-  <!-- SCRIPT FOR LIVE METRICS & CHARTS -->
-  <script>
-    lucide.createIcons();
-    
-    document.addEventListener('DOMContentLoaded', async () => {
-      // 1. Fetch Real Live Data
-      try {
-        const res = await fetch('/api/analytics/public');
-        if (res.ok) {
-          const data = await res.json();
-          
-          if (data.overview) {
-              document.getElementById('val-total').textContent = data.overview.total_complaints;
-              document.getElementById('val-resolved').textContent = data.overview.resolved_this_week;
-              
-              // To get active/open, we can subtract resolved from total (approx) or get it if API provides
-              // If API provides critical, use it, else mock visually based on data
-              const criticalCount = data.priorities.find(p => p.priority === 'Critical')?.count || 0;
-              document.getElementById('val-critical').textContent = criticalCount;
-          }
-          if (data.resolution && data.resolution.mean_hours > 0) {
-              document.getElementById('val-avg').textContent = data.resolution.mean_hours.toFixed(1) + ' hrs';
-          }
-        }
-      } catch (e) {
-        console.error("Failed to load live metrics", e);
-      }
-
-      // 2. Render Preview Chart
-      const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim() || '#94a3b8';
-      Chart.defaults.color = textColor;
-      Chart.defaults.font.family = 'Inter, sans-serif';
-
-      const ctx = document.getElementById('previewChart');
-      if (ctx) {
-        new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-            datasets: [{
-              label: 'Complaints Resolved',
-              data: [12, 19, 15, 25],
-              backgroundColor: 'rgba(34, 184, 240, 0.8)',
-              borderRadius: 4
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-              y: { beginAtZero: true, grid: { color: 'rgba(150,150,150,0.1)' } },
-              x: { grid: { display: false } }
-            }
-          }
-        });
-      }
-    });
-
-    // --- Hero ChatGPT Logic ---
-    document.addEventListener('DOMContentLoaded', () => {
-      const msgsContainer = document.getElementById('heroChatMessages');
-      const input = document.getElementById('heroChatInput');
-      const sendBtn = document.getElementById('heroChatSendBtn');
-      if(!msgsContainer || !input || !sendBtn) return;
-      
-      let history = [];
-
-      async function sendHeroMsg() {
-        const text = input.value.trim();
-        if(!text) return;
-        
-        // Add User MSG
-        const userDiv = document.createElement('div');
-        userDiv.style = "align-self: flex-end; max-width: 80%; background-color: var(--brand-primary); color: white; padding: 1rem 1.25rem; border-radius: 12px; border-bottom-right-radius: 4px; font-size: 1rem; line-height: 1.5;";
-        userDiv.innerText = text;
-        msgsContainer.appendChild(userDiv);
-        msgsContainer.scrollTop = msgsContainer.scrollHeight;
-        
-        input.value = '';
-        sendBtn.disabled = true;
-        history.push({ role: 'user', content: text });
-
-        // Add Loading Dot
-        const loadDiv = document.createElement('div');
-        loadDiv.style = "align-self: flex-start; max-width: 80%; background-color: var(--bg-primary); border: 1px solid var(--border); padding: 1rem 1.25rem; border-radius: 12px; border-bottom-left-radius: 4px; font-size: 1rem; color: var(--text-muted); display:flex; align-items:center; gap:0.5rem;";
-        loadDiv.innerHTML = '<i data-lucide="loader" class="loading-spinner" style="width:16px;"></i> Thinking...';
-        msgsContainer.appendChild(loadDiv);
-        lucide.createIcons();
-        msgsContainer.scrollTop = msgsContainer.scrollHeight;
-
-        try {
-          const res = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: text, history: history.slice(0, -1) })
-          });
-          
-          loadDiv.remove();
-
-          if(res.ok) {
-            const data = await res.json();
-            const botDiv = document.createElement('div');
-            botDiv.style = "align-self: flex-start; max-width: 80%; background-color: var(--bg-primary); border: 1px solid var(--border); padding: 1rem 1.25rem; border-radius: 12px; border-bottom-left-radius: 4px; font-size: 1rem; line-height: 1.5; color: var(--text-primary);";
-            botDiv.innerHTML = data.reply.replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>').replace(/\\n/g, '<br>');
-            msgsContainer.appendChild(botDiv);
-            history.push({ role: 'model', content: data.reply });
-            
-            // Check if the AI wants to submit a complaint
-            if(data.reply.toLowerCase().includes("would you like me to submit") || data.reply.toLowerCase().includes("draft a complaint")) {
-                const actionDiv = document.createElement('div');
-                actionDiv.style = "margin-top: 1rem; display: flex; gap: 0.5rem;";
-                actionDiv.innerHTML = `<a href="submit-complaint.html" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.85rem; text-decoration:none;">Proceed to Form</a>`;
-                botDiv.appendChild(actionDiv);
-            }
-          } else {
-            const errDiv = document.createElement('div');
-            errDiv.style = "align-self: flex-start; color: var(--danger); padding: 1rem;";
-            errDiv.innerText = "Error reaching AI.";
-            msgsContainer.appendChild(errDiv);
-          }
-        } catch (err) {
-          loadDiv.remove();
-        } finally {
-          sendBtn.disabled = false;
-          input.focus();
-          msgsContainer.scrollTop = msgsContainer.scrollHeight;
-        }
-      }
-
-      sendBtn.addEventListener('click', sendHeroMsg);
-      input.addEventListener('keypress', (e) => {
-        if(e.key === 'Enter') sendHeroMsg();
-      });
-    });
-  </script>
-
+# 3. Insert Scripts for Interactivity
+script_inject = '''
     <!-- NEW: PAGE INTERACTIVITY SCRIPTS -->
     <script>
       document.addEventListener('DOMContentLoaded', () => {
@@ -1166,6 +424,12 @@
         counters.forEach(counter => observer.observe(counter));
       });
     </script>
+'''
+body_end = content.rfind('</body>')
+if body_end != -1:
+    content = content[:body_end] + script_inject + '\n' + content[body_end:]
+    print("Inserted JS.")
 
-</body>
-</html>
+with open(file_path, 'w', encoding='utf-8') as f:
+    f.write(content)
+print("Injection completed successfully!")

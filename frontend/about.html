@@ -6,13 +6,15 @@
   <title>About - AI Smart Civic Services</title>
   
   <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="stylesheet" href="css/variables.css">
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/variables.css?v=4">
+  <link rel="stylesheet" href="css/base.css?v=8">
+  <link rel="stylesheet" href="css/components.css?v=4">
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light' || (!savedTheme && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
       document.documentElement.setAttribute('data-theme', 'light');
     }
   </script>
@@ -22,22 +24,31 @@
   <!-- Navigation Header -->
   <header>
     <div class="container">
+      <button class="theme-toggle-btn mobile-theme-toggle" aria-label="Toggle Night Mode">
+        <i data-lucide="moon" class="theme-icon"></i>
+      </button>
       
       <button id="mobile-menu-btn" class="hamburger">
         <i data-lucide="menu"></i>
       </button>
-      <a href="index.html" class="logo">
-        <i data-lucide="shield-check"></i>
-        AI Smart Civic <span style="font-size:0.6rem; margin-left:0.5rem; background:var(--primary-color); color:white; padding:0.2rem 0.4rem; border-radius:4px;">AI Powered</span>
+      <a href="index.html" class="logo" style="display:flex; align-items:flex-start; gap:0.5rem; text-decoration:none;">
+        <i data-lucide="shield-check" style="width:20px; margin-top:2px;"></i>
+        <div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1;">
+            <span style="white-space:nowrap; font-size:1.1rem; font-weight:700;">AI Smart Civic</span>
+            <span style="font-size:0.65rem; background:var(--brand-primary); color:white; padding:0.15rem 0.4rem; border-radius:4px; margin-top:2px; font-weight:600; letter-spacing:0.05em;">AI Powered</span>
+        </div>
       </a>
-        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Night Mode">
-          <i data-lucide="moon" id="theme-icon"></i>
-        </button>
+      
+      
       <div class="nav-links">
 
         <a href="index.html">Citizen Portal</a>
         <a href="track-complaint.html">Track Ticket</a>
         <a href="about.html" style="color: #f8fafc;">About</a>
+        
+        <button class="theme-toggle-btn desktop-theme-toggle" aria-label="Toggle Night Mode">
+          <i data-lucide="moon" class="theme-icon"></i>
+        </button>
         <a href="admin-login.html" class="btn btn-outline" style="padding: 0.4rem 1rem;">Admin Login</a>
       </div>
     </div>
@@ -81,6 +92,6 @@
     </section>
   </main>
 
-  <script src="js/theme.js"></script>
+  <script src="js/theme.js?v=7"></script>
 </body>
 </html>

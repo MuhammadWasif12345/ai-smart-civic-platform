@@ -1,46 +1,30 @@
 from pydantic import BaseModel, Field
-from typing import Optional, List
+from typing import Optional, List, Any
 from datetime import datetime
 
 # --------------------------------------------------------------------------------
 # PYDANTIC SCHEMAS
 # These classes define the exact shape of the data that comes IN to our APIs 
-# and goes OUT to the frontend. They automatically validate the data (e.g., 
-# making sure a required field isn't missing) and convert it to JSON.
+# and goes OUT to the frontend.
 # --------------------------------------------------------------------------------
 
 # 1. CITIZEN SUBMITS A COMPLAINT (INCOMING)
 class ComplaintCreate(BaseModel):
-    # The citizen's description of the problem. It must be at least 10 characters long,
-    # as defined in our error handling requirements, to ensure there's enough detail.
     description: str = Field(..., min_length=10, description="The citizen's complaint text")
-    
-    # Where the problem is located.
     location: str
-    
-    # Optional contact info for the citizen to receive updates.
     citizen_contact: Optional[str] = None
-    
-    # Optional image uploaded by the citizen
     image_base64: Optional[str] = None
-    
-    # We do NOT include AI fields (category, priority) here because the citizen
-    # doesn't provide them — our backend generates those after submission.
 
 # 2. STATUS HISTORY ITEM (OUTGOING)
 class StatusHistoryResponse(BaseModel):
-    # Represents a single change in the complaint's history
     old_status: str
     new_status: str
     changed_at: datetime
     changed_by: str
 
-    # ConfigDict(from_attributes=True) is the modern Pydantic v2 equivalent of orm_mode=True.
-    # It tells Pydantic to read data directly from our SQLAlchemy database objects.
     model_config = {"from_attributes": True}
 
 # 3. COMPLAINT DETAILS (OUTGOING)
-# This is what the API sends back to the frontend (citizen tracking or admin dashboard)
 class ComplaintResponse(BaseModel):
     complaint_id: str
     description: str
@@ -52,46 +36,66 @@ class ComplaintResponse(BaseModel):
     image_path: Optional[str]
     status: str
     assigned_department: Optional[str]
+    assigned_to: Optional[str]
     citizen_contact: Optional[str]
     created_at: datetime
     resolved_at: Optional[datetime]
     
-    # A list of history records, letting the frontend build a timeline of events
     history: List[StatusHistoryResponse] = []
 
     model_config = {"from_attributes": True}
 
 # 4. PAGINATED COMPLAINTS LIST (OUTGOING)
-# Used by the admin dashboard table to show many complaints at once
 class PaginatedComplaints(BaseModel):
     total: int
     complaints: List[ComplaintResponse]
 
 # 5. ADMIN UPDATES STATUS (INCOMING)
 class StatusUpdate(BaseModel):
-    # The new state to transition the complaint into (e.g., "In Progress")
     new_status: str
-    
-    # Who is making the change (used for the audit log)
     changed_by: str
+    note: Optional[str] = None # Field Officers might add a note
 
-# 6. ADMIN ASSIGNS DEPARTMENT (INCOMING)
-class AssignDepartment(BaseModel):
-    # The name of the department taking over (e.g., "Water Department")
-    department: str
+# 6. ADMIN ASSIGNS COMPLAINT (INCOMING)
+class AssignComplaint(BaseModel):
+    department: Optional[str] = None
+    assigned_to: Optional[str] = None
 
-# 7. ADMIN LOGIN (INCOMING)
-class AdminLogin(BaseModel):
+# 7. USER LOGIN (INCOMING)
+class UserLogin(BaseModel):
     username: str
     password: str
 
 # 8. JWT TOKEN RESPONSE (OUTGOING)
 class Token(BaseModel):
-    # The actual encrypted JWT string
     access_token: str
-    
-    # Always "bearer" for standard JWT flows
     token_type: str
+    role: str
+    department: Optional[str] = None
+
+# 9. USER RESPONSE (OUTGOING)
+class UserResponse(BaseModel):
+    id: str
+    username: str
+    role: str
+    department: Optional[str] = None
+    created_at: datetime
+    
+    model_config = {"from_attributes": True}
+
+# 10. AUDIT LOG (OUTGOING)
+class AuditLogResponse(BaseModel):
+    id: str
+    timestamp: datetime
+    user: str
+    role: str
+    action: str
+    resource: Optional[str] = None
+    resource_id: Optional[str] = None
+    old_value: Optional[str] = None
+    new_value: Optional[str] = None
+    
+    model_config = {"from_attributes": True}
 
 # --------------------------------------------------------------------------------
 # ANALYTICS RESPONSES
@@ -109,7 +113,6 @@ class ResolutionTimeStats(BaseModel):
     q1_hours: float
     q3_hours: float
     iqr_hours: float
-    # A plain-English explanation of what these numbers mean
     interpretation: str
 
 class CategoryDistribution(BaseModel):
@@ -145,4 +148,3 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     reply: str
-

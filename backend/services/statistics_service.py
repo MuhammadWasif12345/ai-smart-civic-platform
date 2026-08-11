@@ -17,16 +17,20 @@ from ..models import Complaint
 class StatisticsEngine:
     
     @staticmethod
-    def get_overview_stats(db: Session) -> Dict[str, int]:
+    def get_overview_stats(db: Session, department: str = None) -> Dict[str, int]:
         # Simple count queries directly against the database
-        total = db.query(Complaint).count()
-        open_count = db.query(Complaint).filter(Complaint.status == "Open").count()
-        critical_count = db.query(Complaint).filter(Complaint.priority == "Critical").count()
+        query = db.query(Complaint)
+        if department:
+            query = query.filter(Complaint.category == department)
+            
+        total = query.count()
+        open_count = query.filter(Complaint.status.notin_(["RESOLVED"])).count()
+        critical_count = query.filter(Complaint.priority == "Critical").count()
         
         # Calculate how many were resolved in the last 7 days
         seven_days_ago = datetime.utcnow() - timedelta(days=7)
-        resolved_recent = db.query(Complaint).filter(
-            Complaint.status == "Resolved",
+        resolved_recent = query.filter(
+            Complaint.status == "RESOLVED",
             Complaint.resolved_at >= seven_days_ago
         ).count()
         
@@ -38,10 +42,13 @@ class StatisticsEngine:
         }
 
     @staticmethod
-    def get_category_distribution(db: Session) -> List[Dict[str, Any]]:
+    def get_category_distribution(db: Session, department: str = None) -> List[Dict[str, Any]]:
         # We load the data into a pandas DataFrame because pandas is fantastic
         # at grouping and summarizing data.
-        complaints = db.query(Complaint.category).all()
+        query = db.query(Complaint.category)
+        if department:
+            query = query.filter(Complaint.category == department)
+        complaints = query.all()
         if not complaints:
             return []
             
@@ -59,9 +66,12 @@ class StatisticsEngine:
         return counts.to_dict('records')
 
     @staticmethod
-    def get_priority_distribution(db: Session) -> List[Dict[str, Any]]:
+    def get_priority_distribution(db: Session, department: str = None) -> List[Dict[str, Any]]:
         # Same approach as categories, but simpler since we don't need percentages
-        complaints = db.query(Complaint.priority).all()
+        query = db.query(Complaint.priority)
+        if department:
+            query = query.filter(Complaint.category == department)
+        complaints = query.all()
         if not complaints:
             return []
             
@@ -70,16 +80,20 @@ class StatisticsEngine:
         return counts.to_dict('records')
 
     @staticmethod
-    def get_resolution_time_stats(db: Session) -> Dict[str, Any]:
+    def get_resolution_time_stats(db: Session, department: str = None) -> Dict[str, Any]:
         """
         The core of the Batch 4 requirement. Calculates central tendency, spread,
         and quartiles for how long it takes to resolve a complaint.
         """
         # We only care about complaints that are actually finished
-        resolved_complaints = db.query(Complaint.created_at, Complaint.resolved_at).filter(
-            Complaint.status == "Resolved",
+        query = db.query(Complaint.created_at, Complaint.resolved_at).filter(
+            Complaint.status == "RESOLVED",
             Complaint.resolved_at != None
-        ).all()
+        )
+        if department:
+            query = query.filter(Complaint.category == department)
+            
+        resolved_complaints = query.all()
         
         # If there aren't enough finished complaints yet, we can't do meaningful math
         if len(resolved_complaints) < 2:
