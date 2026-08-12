@@ -26,15 +26,26 @@ trackForm.addEventListener("submit", async (event) => {
   try {
     // Fetch data from the public tracking endpoint
     const response = await fetch(`/api/complaints/${complaintId}`);
+    let data;
     
     if (response.status === 404) {
-      throw new Error("We couldn't find a complaint with that ID — double-check and try again.");
-    }
-    if (!response.ok) {
+      // Fallback to local storage for Vercel demo where DB resets
+      let saved = [];
+      try {
+        saved = JSON.parse(localStorage.getItem('my_complaints') || '[]');
+      } catch (e) {}
+      
+      let localData = saved.find(c => String(c.complaint_id) === String(complaintId));
+      if (localData) {
+        data = localData;
+      } else {
+        throw new Error("We couldn't find a complaint with that ID — double-check and try again.");
+      }
+    } else if (!response.ok) {
       throw new Error("Couldn't reach the server. Please try again later.");
+    } else {
+      data = await response.json();
     }
-
-    const data = await response.json();
     
     // --- POPULATE THE UI ---
     
@@ -88,5 +99,16 @@ trackForm.addEventListener("submit", async (event) => {
     // Restore button state
     submitBtn.innerHTML = originalBtnText;
     submitBtn.disabled = false;
+  }
+});
+
+// Auto-track if ID is in the URL (e.g. from submission page)
+document.addEventListener("DOMContentLoaded", () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const idParam = urlParams.get('id');
+  if (idParam) {
+    document.getElementById("complaint_id").value = idParam;
+    // trigger form submit
+    trackForm.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
   }
 });

@@ -189,6 +189,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const data = await response.json();
 
+      // Save to localStorage for demo persistence (Vercel ephemeral DB workaround)
+      try {
+        let saved = JSON.parse(localStorage.getItem('my_complaints') || '[]');
+        // We ensure data has the fields needed by track-complaint.js
+        if (!data.status) data.status = "SUBMITTED";
+        if (!data.history) data.history = [{ old_status: "None", new_status: "SUBMITTED", changed_at: new Date().toISOString() }];
+        saved.push(data);
+        localStorage.setItem('my_complaints', JSON.stringify(saved));
+      } catch (err) {
+        console.error("Local storage error:", err);
+      }
+
       // Show success screen
       formCard.style.display = 'none';
       aiExplanation.style.display = 'none';
